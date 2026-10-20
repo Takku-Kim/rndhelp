@@ -27,6 +27,14 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
   font-family: 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
 }}
 .block-container {{ padding-top: 1.2rem; max-width: 1240px; }}
+@media (max-width: 640px) {{
+  .block-container {{ padding-top: 3.8rem; padding-left: .9rem; padding-right: .9rem; }}
+  .kw-top {{ flex-direction: column; align-items: flex-start !important; gap: 2px; padding: 10px 14px !important; }}
+  .kw-top .brand {{ font-size: .98rem !important; }}
+  .kw-top .brand small {{ display: block; margin-left: 0 !important; }}
+  .kw-top .meta {{ font-size: .72rem !important; }}
+  .kw-title {{ font-size: 1.2rem !important; }}
+}}
 [data-testid="stSidebar"] {{ background: #F4F6F9; border-right: 1px solid #DDE3EA; }}
 [data-testid="stSidebarNav"] span {{ font-size: 0.92rem; }}
 .kw-top {{
@@ -54,6 +62,8 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-result .path {{ font-size:1.15rem; font-weight:700; color:{KW_NAVY}; }}
 .kw-kv {{ color:#4E5968; font-size:.86rem; margin-top:6px; }}
 .kw-foot {{ color:#8B95A1; font-size:.76rem; border-top:1px solid #E5E8EB; margin-top:28px; padding-top:8px; }}
+.kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
+@media (max-width: 640px) {{ .kw-grid {{ grid-template-columns:repeat(2,1fr); gap:8px; }} .kw-grid .kw-card .val {{ font-size:1.2rem; }} }}
 div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
 .stTabs [data-baseweb="tab"] {{ font-size:.92rem; }}
 </style>
@@ -87,6 +97,14 @@ def card(label: str, value: str, sub: str = "") -> None:
         f'<div class="val">{html.escape(value)}</div><div class="sub">{html.escape(sub)}</div></div>',
         unsafe_allow_html=True,
     )
+
+
+def card_grid(items: list[tuple[str, str, str]]) -> None:
+    """카드 여러 개를 한 줄(모바일은 2열)로."""
+    cells = "".join(
+        f'<div class="kw-card"><div class="lbl">{html.escape(a)}</div><div class="val">{html.escape(b)}</div>'
+        f'<div class="sub">{html.escape(c)}</div></div>' for a, b, c in items)
+    st.markdown(f'<div class="kw-grid">{cells}</div>', unsafe_allow_html=True)
 
 
 def badge(text: str) -> str:

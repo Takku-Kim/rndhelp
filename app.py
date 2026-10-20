@@ -4,7 +4,7 @@
 """
 import streamlit as st
 
-st.set_page_config(page_title="RND-HELP | 국가R&D 과제관리 도우미", page_icon="💧", layout="wide")
+st.set_page_config(page_title="RND-HELP | 국가R&D 과제관리 도우미", page_icon="assets/icon.png", layout="wide")
 
 from core import ui  # noqa: E402
 
