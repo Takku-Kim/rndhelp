@@ -31,7 +31,7 @@ with c:
     st.page_link("views/settlement.py", label="정산 사전점검", icon=":material/fact_check:")
     st.page_link("views/inkind.py", label="현물 적정성 점검", icon=":material/precision_manufacturing:")
 
-ui.section("이번 기준 개정에서 정산에 바로 영향이 있는 것")
+ui.section("< 최근 국가 기준 개정에 따라 영향을 주는 요소 >")
 st.markdown(
     "- **회의비 식비** — 2026.5.6.부터 사전 내부결재 의무가 없어지고, *참여연구자만 참석한 회의*의 식비만 계상 불가로 바뀌었습니다. "
     "5.6. 이전 집행분은 종전 기준(외부인 참석 + 사전결재)을 그대로 적용합니다.\n"
