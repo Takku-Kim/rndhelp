@@ -1,10 +1,10 @@
 """샘플(가상) 데이터 생성기.
 
-- data/train_ledger.csv   : ML 비목 분류기 학습용 집행내역 (수공 계정 + 적요 → RCMS 비목/세목)
+- data/train_ledger.csv   : ML 비목 분류기 학습용 집행내역 (K-water 계정 + 적요 → RCMS 비목/세목)
 - data/sample_ledger.csv  : 정산 사전점검 데모용 집행내역 (의도적으로 문제 건 포함)
 - data/sample_inkind.csv  : 현물(장비) 적정성 점검 데모용 장비 목록
 
-실제 운영 시에는 수공 정산시스템에서 내려받은 과거 집행내역과 RCMS 최종 등록 비목을
+실제 운영 시에는 K-water 정산시스템에서 내려받은 과거 집행내역과 RCMS 최종 등록 비목을
 짝지어 train_ledger.csv 를 대체하면 된다.  실행:  python scripts/make_sample_data.py
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 rng = random.Random(20261020)
 
-# (수공계정, RCMS 비목, RCMS 세목, 품목 어휘, 거래처 어휘, 금액범위)
+# (K-water 계정, RCMS 비목, RCMS 세목, 품목 어휘, 거래처 어휘, 금액범위)
 TEMPLATES = [
     ("5240", "연구재료비", "연구재료 구입비",
      ["질산 2.5L", "황산 표준용액", "NaOH 시약", "에탄올 500mL", "메탄올 HPLC급", "TOC 표준물질", "여과지 GF/C", "멤브레인 필터 0.45um",

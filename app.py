@@ -31,7 +31,7 @@ pages = {
         st.Page("views/proposal.py", url_path="proposal", title="제안서 작성 도우미", icon=":material/edit_document:"),
     ],
     "수행·정산": [
-        st.Page("views/mapping.py", url_path="mapping", title="비목 매핑 (수공↔RCMS)", icon=":material/swap_horiz:"),
+        st.Page("views/mapping.py", url_path="mapping", title="비목 매핑 (K-water↔RCMS)", icon=":material/swap_horiz:"),
         st.Page("views/settlement.py", url_path="settlement", title="정산 사전점검", icon=":material/fact_check:"),
         st.Page("views/inkind.py", url_path="inkind", title="현물 적정성 점검", icon=":material/precision_manufacturing:"),
     ],

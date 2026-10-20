@@ -6,8 +6,8 @@ import streamlit as st
 
 from core import loader, mapper, state, ui
 
-ui.header("수행·정산 › 비목 매핑", "비목 매핑 (수공 정산시스템 → RCMS)",
-          "수공 계정과 적요를 넣으면 RCMS 비목·세목, 판정 근거, 필요한 증빙을 안내합니다. "
+ui.header("수행·정산 › 비목 매핑", "비목 매핑 (K-water 정산시스템 → RCMS)",
+          "K-water 계정과 적요를 넣으면 RCMS 비목·세목, 판정 근거, 필요한 증빙을 안내합니다. "
           "룰과 AI가 일치하면 <b>자동확정</b>, 엇갈리거나 확신이 낮으면 <b>검토필요</b>로 표시합니다.")
 
 hm = state.get_mapper(state.model_version())
@@ -22,7 +22,7 @@ tab1, tab2, tab3 = st.tabs(["단건 조회", "일괄 변환", "매핑 기준·�
 with tab1:
     c1, c2 = st.columns([1, 1.4])
     with c1:
-        code = st.selectbox("수공 계정", list(acc_label), index=list(acc_label).index("5260"),
+        code = st.selectbox("K-water 계정", list(acc_label), index=list(acc_label).index("5260"),
                             format_func=lambda c: acc_label[c])
         desc = st.text_input("적요 / 품목", "수질 시료 PFAS 의뢰분석 20건")
         vendor = st.text_input("거래처 (선택)", "한국화학융합시험연구원")
@@ -62,7 +62,7 @@ with tab1:
 
 # ───────────────────────── 일괄 ─────────────────────────
 with tab2:
-    st.markdown("수공 정산시스템에서 내려받은 집행내역(CSV/XLSX)을 올리면 전체를 RCMS 비목으로 변환합니다. "
+    st.markdown("K-water 정산시스템에서 내려받은 집행내역(CSV/XLSX)을 올리면 전체를 RCMS 비목으로 변환합니다. "
                 "필수 열: `account`(계정코드), `description`(적요) · 선택: `vendor`, `amount`, `date`")
     up = st.file_uploader("집행내역 파일", type=["csv", "xlsx"], key="bulk")
     if up is not None:
@@ -95,7 +95,7 @@ with tab2:
 
 # ───────────────────────── 기준·모델 ─────────────────────────
 with tab3:
-    ui.section("수공 계정 기본 대응표 (샘플)")
+    ui.section("K-water 계정 기본 대응표 (샘플)")
     st.dataframe(acc.rename(columns={"code": "계정코드", "name": "계정명", "type": "구분",
                                      "default_rcms_bimok": "기본 RCMS 비목", "note": "비고"}),
                  hide_index=True, width="stretch")
@@ -112,7 +112,7 @@ with tab3:
     c2.metric("담당자 교정", f"{m.n_feedback:,}")
     c3.metric("검증 정확도(20% 홀드아웃)", f"{m.holdout_acc:.1%}")
     ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. 현재는 가상 학습데이터라 정확도가 높게 나옵니다. "
-            "실제 운영에서는 <b>과거 수공 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 다시 학습하세요 "
+            "실제 운영에서는 <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 다시 학습하세요 "
             "(<code>data/train_ledger.csv</code> 교체). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됩니다.")
     fb = state.read_feedback()
     if len(fb):

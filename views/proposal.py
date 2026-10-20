@@ -13,7 +13,7 @@ c1, c2, c3 = st.columns([1.2, 1, 1])
 akey = c1.selectbox("전문기관", list(ag["agencies"]), format_func=lambda k: f"{k} · {ag['agencies'][k]['name']}")
 A = ag["agencies"][akey]
 inst = c2.selectbox("주관 연구소", loader.INSTITUTES, index=2)
-role = c3.selectbox("수공 역할", ["주관연구개발기관", "공동연구개발기관", "위탁연구개발기관"])
+role = c3.selectbox("K-water 역할", ["주관연구개발기관", "공동연구개발기관", "위탁연구개발기관"])
 
 t1, t2, t3 = st.tabs(["연구개발비 편성 검증", "제출 전 체크리스트", "계획서 목차 초안"])
 
