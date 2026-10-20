@@ -2,11 +2,26 @@
 
 실행:  streamlit run app.py
 """
+import hashlib
+import sys
+from pathlib import Path
+
 import streamlit as st
 
 st.set_page_config(page_title="RND-HELP | 국가R&D 과제관리 도우미", page_icon="assets/icon.png", layout="wide")
 
+# 클라우드에서 새 코드가 반영될 때 core 모듈이 옛 버전으로 남아 있으면(AttributeError 등)
+# core/*.py 내용이 바뀐 것을 감지해 강제로 다시 불러온다.
+_CORE = Path(__file__).parent / "core"
+_SIG = hashlib.md5(b"".join(p.read_bytes() for p in sorted(_CORE.glob("*.py")))).hexdigest()
+if getattr(sys.modules.get("core"), "_SIG", None) != _SIG:
+    for _m in [m for m in list(sys.modules) if m == "core" or m.startswith("core.")]:
+        sys.modules.pop(_m, None)
+
+import core  # noqa: E402
 from core import ui  # noqa: E402
+
+core._SIG = _SIG
 
 ui.setup_page()
 
