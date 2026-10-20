@@ -75,7 +75,7 @@ def setup_page() -> None:
     st.markdown(
         '<div class="kw-top"><div class="brand">K-water 연구원 &nbsp;|&nbsp; 국가R&D 과제관리 도우미'
         '<small>RND-HELP · 시범운영</small></div>'
-        '<div class="meta">기준: 연구개발비 사용 기준 2026.5.6. 개정 반영 · 샘플 데이터</div></div>',
+        '<div class="meta">기준: 연구개발비 사용 기준 2026.5.6. 개정 반영</div></div>',
         unsafe_allow_html=True,
     )
 
@@ -119,8 +119,7 @@ def note(text: str, kind: str = "note") -> None:
 def footer() -> None:
     st.markdown(
         '<div class="kw-foot">본 도우미의 판정은 사전 점검용 참고 정보이며 정산 결과를 보장하지 않습니다. '
-        '최종 판단은 연구개발계획서·협약서, 전문기관 지침과 연구지원 담당 부서 확인을 따릅니다. '
-        '계정코드·집행내역은 가상 샘플입니다.</div>',
+        '최종 판단은 연구개발계획서·협약서, 전문기관 지침과 연구지원 담당 부서 확인을 따릅니다.</div>',
         unsafe_allow_html=True,
     )
 

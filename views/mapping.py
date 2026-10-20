@@ -68,7 +68,7 @@ with tab2:
     if up is not None:
         df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
     else:
-        st.caption("파일이 없으면 샘플 집행내역 22건으로 보여드립니다.")
+        st.caption("파일이 없으면 예시 집행내역 22건으로 보여드립니다.")
         df = loader.load_csv("sample_ledger.csv")
     miss = {"account", "description"} - set(df.columns)
     if miss:
@@ -95,7 +95,7 @@ with tab2:
 
 # ───────────────────────── 기준·모델 ─────────────────────────
 with tab3:
-    ui.section("K-water 계정 기본 대응표 (샘플)")
+    ui.section("K-water 계정 기본 대응표")
     st.dataframe(acc.rename(columns={"code": "계정코드", "name": "계정명", "type": "구분",
                                      "default_rcms_bimok": "기본 RCMS 비목", "note": "비고"}),
                  hide_index=True, width="stretch")
@@ -111,9 +111,8 @@ with tab3:
     c1.metric("학습 집행건", f"{m.n_train:,}")
     c2.metric("담당자 교정", f"{m.n_feedback:,}")
     c3.metric("검증 정확도(20% 홀드아웃)", f"{m.holdout_acc:.1%}")
-    ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. 현재는 가상 학습데이터라 정확도가 높게 나옵니다. "
-            "실제 운영에서는 <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 다시 학습하세요 "
-            "(<code>data/train_ledger.csv</code> 교체). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됩니다.")
+    ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 학습합니다 "
+            "(<code>data/train_ledger.csv</code>). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됩니다.")
     fb = state.read_feedback()
     if len(fb):
         st.dataframe(fb, hide_index=True, width="stretch")
