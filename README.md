@@ -3,6 +3,8 @@
 수공 정산시스템과 국가 RCMS의 **비목 분류가 달라** 연구원이 정산 때마다 겪는 어려움을 줄이기 위한 Streamlit 시범 앱입니다.
 룰 기반 판정과 과거 집행내역으로 학습한 AI 분류를 함께 씁니다. 인트라넷 탑재 전, aihub.kwaterai.com 처럼 웹에서 시범 운영하는 것을 전제로 했습니다.
 
+**🔗 시범 서비스: https://rndaid.streamlit.app**
+
 > ⚠ 계정코드·집행내역·현물 장비는 모두 **가상 샘플**입니다. 판정은 사전 점검용 참고 정보이며 정산 결과를 보장하지 않습니다.
 
 ## 메뉴
@@ -36,7 +38,7 @@ python -m pytest -q          # 핵심 로직 테스트
 python scripts/make_sample_data.py   # 샘플 데이터 재생성
 ```
 
-Streamlit Community Cloud: 이 리포를 연결하고 Main file을 `app.py`로 지정하면 됩니다.
+Streamlit Community Cloud: 리포 `newcave/rndhelp`, 브랜치 `main`, Main file `app.py`, App URL `rndaid` → https://rndaid.streamlit.app
 
 ### LLM 연결 (선택)
 제안서 문단 초안을 LLM으로 채우려면 `.streamlit/secrets.toml`(깃 제외)에 OpenAI 호환 엔드포인트를 넣습니다.
