@@ -118,8 +118,8 @@ def note(text: str, kind: str = "note") -> None:
 
 def footer() -> None:
     st.markdown(
-        '<div class="kw-foot">본 도우미의 판정은 사전 점검용 참고 정보이며 정산 결과를 보장하지 않습니다. '
-        '최종 판단은 연구개발계획서·협약서, 전문기관 지침과 연구지원 담당 부서 확인을 따릅니다.</div>',
+        '<div class="kw-foot">본 도우미의 판정은 사전 점검용 참고 정보이며 정산 결과를 보장하지 않음. '
+        '최종 판단은 연구개발계획서·협약서, 전문기관 지침과 연구지원 담당 부서 확인을 따름.</div>',
         unsafe_allow_html=True,
     )
 

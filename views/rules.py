@@ -3,7 +3,7 @@ import streamlit as st
 from core import state, ui
 
 ui.header("지원 › 규정·FAQ 검색", "규정·FAQ 검색",
-          "연구개발비 사용 기준, KEITI 사례집 등 정산 관련 규정 요약에서 질문과 가까운 항목을 찾습니다.")
+          "연구개발비 사용 기준, KEITI 사례집 등 정산 관련 규정 요약에서 질문과 가까운 항목을 찾음.")
 
 rs = state.get_search()
 ex = {"회의 식대": "회의비 식대 참여연구원만 참석", "타 과제 장비 현물": "장비 현물 타 국가R&D 예산으로 산 장비",
@@ -30,5 +30,5 @@ if q.strip():
             f'<div style="font-weight:700;margin:4px 0">{h.title}</div><div style="font-size:.9rem;color:#333D4B">{h.text}</div>'
             f'<div class="kw-kv" style="font-size:.78rem">출처: {h.source_name}</div></div>', unsafe_allow_html=True)
 
-ui.note("요약문은 원문이 아닙니다. 인용·소명 시에는 반드시 고시·지침 원문 조문을 확인해 주세요. "
-        "지식베이스는 <code>data/regulations.yaml</code>에서 항목을 추가·수정할 수 있습니다.")
+ui.note("요약문은 원문이 아님. 인용·소명 시에는 반드시 고시·지침 원문 조문 확인 필요. "
+        "지식베이스는 <code>data/regulations.yaml</code>에서 항목 추가·수정 가능.")

@@ -7,7 +7,7 @@ import streamlit as st
 from core import checks, loader, mapper, state, ui
 
 ui.header("수행·정산 › 정산 사전점검", "정산 사전점검",
-          "사용실적보고 전에 집행내역 전체를 RCMS 비목으로 변환하고, 정산에서 자주 지적되는 항목을 미리 걸러냅니다.")
+          "사용실적보고 전에 집행내역 전체를 RCMS 비목으로 변환하고, 정산에서 자주 지적되는 항목을 미리 걸러냄.")
 
 hm = state.get_mapper(state.model_version())
 rs = state.get_search()
@@ -29,7 +29,7 @@ if up is not None:
     df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
 else:
     df = loader.load_csv("sample_ledger.csv")
-    st.caption("파일을 올리지 않으면 예시 집행내역 22건으로 점검합니다.")
+    st.caption("파일을 올리지 않으면 예시 집행내역 22건으로 점검함.")
 
 mapped = mapper.results_to_frame(df, hm.map_many(df)).reset_index(drop=True)
 p = checks.ProjectInfo(start, end, int(direct_total), int(personnel))
@@ -51,7 +51,7 @@ with c4:
 
 ui.section("점검 결과")
 if f.empty:
-    st.success("지적 사항이 없습니다.")
+    st.success("지적 사항 없음")
 else:
     tbl = f.copy()
     tbl["건"] = tbl["row"].apply(lambda r: "과제 전체" if pd.isna(r) else f"#{int(r) + 1}")
@@ -81,5 +81,5 @@ with pd.ExcelWriter(buf) as xw:
     summ.to_excel(xw, sheet_name="비목별요약", index=False)
 st.download_button("점검 결과 내려받기 (xlsx)", buf.getvalue(), f"정산사전점검_{date.today():%Y%m%d}.xlsx",
                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary")
-ui.note(f"<b>{inst}</b> · {agency} · 이 점검은 공개 기준을 요약한 룰로 수행합니다. 전문기관별 세부 지침(예: KEITI 사례집)과 다를 수 있어 "
-        "‘확인’ 항목은 연구지원 담당과 협의해 주세요.")
+ui.note(f"<b>{inst}</b> · {agency} · 이 점검은 공개 기준을 요약한 룰로 수행함. 전문기관별 세부 지침(예: KEITI 사례집)과 다를 수 있어 "
+        "‘확인’ 항목은 연구지원 담당과 협의 필요.")

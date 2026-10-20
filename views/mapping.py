@@ -7,8 +7,8 @@ import streamlit as st
 from core import loader, mapper, state, ui
 
 ui.header("수행·정산 › 비목 매핑", "비목 매핑 (K-water 정산시스템 → RCMS)",
-          "K-water 계정과 적요를 넣으면 RCMS 비목·세목, 판정 근거, 필요한 증빙을 안내합니다. "
-          "룰과 AI가 일치하면 <b>자동확정</b>, 엇갈리거나 확신이 낮으면 <b>검토필요</b>로 표시합니다.")
+          "K-water 계정과 적요를 넣으면 RCMS 비목·세목, 판정 근거, 필요한 증빙을 안내함. "
+          "룰과 AI가 일치하면 <b>자동확정</b>, 엇갈리거나 확신이 낮으면 <b>검토필요</b>로 표시함.")
 
 hm = state.get_mapper(state.model_version())
 acc = loader.accounts()
@@ -49,7 +49,7 @@ with tab1:
             st.dataframe(top, hide_index=True, width="stretch",
                          column_config={"확률": st.column_config.ProgressColumn(format="percent", min_value=0, max_value=1)})
 
-            with st.expander("판정이 틀렸나요? 올바른 비목으로 교정해 학습시키기"):
+            with st.expander("판정 오류 시 — 올바른 비목으로 교정·재학습"):
                 fix = st.selectbox("올바른 RCMS 비목 | 세목", all_labels,
                                    index=all_labels.index(f"{r.bimok} | {r.semok}") if f"{r.bimok} | {r.semok}" in all_labels else 0)
                 if st.button("교정 내용 저장", type="primary"):
@@ -57,22 +57,22 @@ with tab1:
                     state.add_feedback({"account": code, "description": desc, "vendor": vendor,
                                         "rcms_bimok": b, "rcms_semok": s, "ts": datetime.now().isoformat(timespec="seconds")})
                     state.bump_model()
-                    st.success("저장했습니다. 모델을 다시 학습합니다.")
+                    st.success("저장 완료 — 모델 재학습")
                     st.rerun()
 
 # ───────────────────────── 일괄 ─────────────────────────
 with tab2:
-    st.markdown("K-water 정산시스템에서 내려받은 집행내역(CSV/XLSX)을 올리면 전체를 RCMS 비목으로 변환합니다. "
+    st.markdown("K-water 정산시스템에서 내려받은 집행내역(CSV/XLSX)을 올리면 전체를 RCMS 비목으로 변환함. "
                 "필수 열: `account`(계정코드), `description`(적요) · 선택: `vendor`, `amount`, `date`")
     up = st.file_uploader("집행내역 파일", type=["csv", "xlsx"], key="bulk")
     if up is not None:
         df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
     else:
-        st.caption("파일이 없으면 예시 집행내역 22건으로 보여드립니다.")
+        st.caption("파일이 없으면 예시 집행내역 22건으로 표시함.")
         df = loader.load_csv("sample_ledger.csv")
     miss = {"account", "description"} - set(df.columns)
     if miss:
-        st.error(f"필수 열이 없습니다: {', '.join(miss)}")
+        st.error(f"필수 열 없음: {', '.join(miss)}")
     else:
         out = mapper.results_to_frame(df, hm.map_many(df))
         n = out["판정"].value_counts()
@@ -111,8 +111,8 @@ with tab3:
     c1.metric("학습 집행건", f"{m.n_train:,}")
     c2.metric("담당자 교정", f"{m.n_feedback:,}")
     c3.metric("검증 정확도(20% 홀드아웃)", f"{m.holdout_acc:.1%}")
-    ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 학습합니다 "
-            "(<code>data/train_ledger.csv</code>). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됩니다.")
+    ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 학습함 "
+            "(<code>data/train_ledger.csv</code>). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됨.")
     fb = state.read_feedback()
     if len(fb):
         st.dataframe(fb, hide_index=True, width="stretch")

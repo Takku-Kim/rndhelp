@@ -6,12 +6,12 @@ import streamlit as st
 from core import inkind, loader, state, ui
 
 ui.header("수행·정산 › 현물 적정성", "현물(기관 보유 장비) 적정성 점검",
-          "정산 담당자·회계사가 현물 장비를 불인정하는 사유를 계획 단계부터 미리 점검하고, 산정 근거와 소명서 초안을 만듭니다.")
+          "정산 담당자·회계사가 현물 장비를 불인정하는 사유를 계획 단계부터 미리 점검하고, 산정 근거와 소명서 초안을 작성함.")
 
 rs = state.get_search()
-ui.note("현물 불인정은 대부분 네 가지에서 생깁니다 — ① 계획서 <b>보유현황 미반영</b> ② <b>타 국가R&D 재원</b>으로 산 장비 "
+ui.note("현물 불인정은 대부분 네 가지에서 발생 — ① 계획서 <b>보유현황 미반영</b> ② <b>타 국가R&D 재원</b>으로 산 장비 "
         "③ 과제 사용을 입증할 <b>사용일지 부재</b> ④ 같은 장비의 유지·교정비를 현금으로도 잡은 <b>중복 계상</b>. "
-        "산정 방식은 기관 규정마다 달라 아래 두 산식을 나란히 보여주고 낮은 값을 권고합니다.", "warn")
+        "산정 방식은 기관 규정마다 달라 아래 두 산식을 나란히 보여주고 낮은 값을 권고함.", "warn")
 
 c1, c2 = st.columns([2, 1])
 pname = c1.text_input("과제명", "AI 기반 정수장 미량오염물질 대응 기술 개발")
@@ -72,7 +72,7 @@ if results:
     with c1:
         st.markdown(f"{ui.badge(res.grade)} &nbsp; **{res.name}** · {row['asset_no']}", unsafe_allow_html=True)
         if not res.issues:
-            st.success("지적 사항 없음 — 아래 증빙만 갖추면 됩니다.")
+            st.success("지적 사항 없음 — 아래 증빙만 갖추면 됨.")
         for sev, msg, ref in res.issues:
             it = rs.get(ref)
             st.markdown(f"{ui.badge(sev)} {msg} <span style='color:#8B95A1;font-size:.8rem'>[{ref} {it['title'] if it else ''}]</span>",
@@ -87,4 +87,4 @@ if results:
 
 ui.note("산식 A(감가상각) = 취득가 ÷ 내용연수 × 사용개월/12 × 과제 사용비율 (잔존 장부가 한도) · "
         "산식 B(사용료) = 기관 장비사용료 규정 단가 × 과제 사용시간. 두 산식 모두 <b>기관 자체 규정 例示</b>이며 "
-        "전문기관·정산기관과 계획 단계에서 산식을 합의해 두는 것이 가장 확실한 예방책입니다.")
+        "전문기관·정산기관과 계획 단계에서 산식을 합의해 두는 것이 가장 확실한 예방책.")

@@ -65,11 +65,11 @@ def check_row(i: int, r: pd.Series, p: ProjectInfo) -> list[Finding]:
     # 1. 협약기간
     if d and (d < p.start or d > p.end):
         f.append(Finding(i, "불인정", "협약기간 외 집행",
-                         f"집행일 {d} 이 협약기간({p.start}~{p.end}) 밖입니다. 협약기간 내 지출원인행위가 없으면 회수 대상.", "K17", amt))
+                         f"집행일 {d} 이 협약기간({p.start}~{p.end}) 밖임. 협약기간 내 지출원인행위가 없으면 회수 대상.", "K17", amt))
 
     # 2. 유흥·접대
     if ALCOHOL.search(desc) or str(r.get("RCMS 비목")) == "불인정" and "유흥" in semok:
-        f.append(Finding(i, "불인정", "유흥·접대성 경비", "주류 등 유흥성 비용은 계상할 수 없습니다.", "K07", amt))
+        f.append(Finding(i, "불인정", "유흥·접대성 경비", "주류 등 유흥성 비용은 계상 불가.", "K07", amt))
 
     # 3. 회의 식비
     if FOOD.search(desc) and (semok == "회의비" or str(r.get("account")) in ("5220", "5230")):
@@ -80,7 +80,7 @@ def check_row(i: int, r: pd.Series, p: ProjectInfo) -> list[Finding]:
                                  "2026.5.6. 이후 참여연구자만 참여한 회의의 식비는 계상 불가. 과제 미참여자가 실제 참석했다면 회의록에 명단 보완.", "K03", amt))
             elif ext != "Y":
                 f.append(Finding(i, "보완", "회의 참석자 구분 미기재",
-                                 "과제 미참여자 참석 여부를 확인할 수 없습니다. 회의록에 참석자 명단·소속 기재.", "K03"))
+                                 "과제 미참여자 참석 여부 확인 불가. 회의록에 참석자 명단·소속 기재.", "K03"))
         elif d:
             if not _has(ev, "결재", "품의"):
                 f.append(Finding(i, "보완", "개정 전 회의 식비 — 사전결재 증빙",
@@ -131,11 +131,11 @@ def check_row(i: int, r: pd.Series, p: ProjectInfo) -> list[Finding]:
 
     # 10. 증빙 자체 누락
     if not ev.strip():
-        f.append(Finding(i, "보완", "증빙 없음", "지출 근거 증명자료가 없으면 인정되지 않습니다.", "K17"))
+        f.append(Finding(i, "보완", "증빙 없음", "지출 근거 증명자료가 없으면 인정되지 않음.", "K17"))
 
     # 11. 간이영수증
     if "간이영수증" in ev and amt > 30_000:
-        f.append(Finding(i, "보완", "적격증빙 아님", "간이영수증은 적격증빙이 아닙니다. 세금계산서·카드전표 또는 소명.", "K17"))
+        f.append(Finding(i, "보완", "적격증빙 아님", "간이영수증은 적격증빙이 아님. 세금계산서·카드전표 또는 소명.", "K17"))
     return f
 
 

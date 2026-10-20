@@ -4,8 +4,8 @@ import streamlit as st
 from core import budget, llm, loader, state, ui
 
 ui.header("과제 준비 › 제안서 작성 도우미", "제안서 작성 도우미",
-          "전문기관별 체크리스트와 연구개발비 편성 한도를 확인하고, 연구개발계획서 목차 초안을 만듭니다. "
-          "정산 마찰의 상당수는 <b>제안 단계의 편성·현물 반영</b>에서 시작됩니다.")
+          "전문기관별 체크리스트와 연구개발비 편성 한도를 확인하고, 연구개발계획서 목차 초안을 작성함. "
+          "정산 마찰의 상당수는 <b>제안 단계의 편성·현물 반영</b>에서 시작됨.")
 
 ag = loader.agencies()
 rs = state.get_search()
@@ -18,7 +18,7 @@ role = c3.selectbox("K-water 역할", ["주관연구개발기관", "공동연구
 t1, t2, t3 = st.tabs(["연구개발비 편성 검증", "제출 전 체크리스트", "계획서 목차 초안"])
 
 with t1:
-    st.caption("1개 연차 기준 · 단위 천원 · 표를 직접 고치면 바로 다시 검증합니다.")
+    st.caption("1개 연차 기준 · 단위 천원 · 표를 직접 고치면 바로 다시 검증함.")
     c1, c2, c3, c4 = st.columns(4)
     gov = c1.number_input("정부지원 연구개발비(천원)", value=250_000, step=10_000)
     gov_max = c2.number_input("정부지원 상한 (공기업)", value=float(A["gov_ratio_max_public"]), step=0.05, format="%.2f")
@@ -36,7 +36,7 @@ with t1:
         col.metric(k, f"{s[k]:,.0f}")
     fails = [c for c in C if not c.ok]
     if fails:
-        ui.note(f"한도·비율 위반 {len(fails)}건 — 제출 전에 조정하세요.", "warn")
+        ui.note(f"한도·비율 위반 {len(fails)}건 — 제출 전 조정 필요.", "warn")
     st.dataframe(pd.DataFrame([{"결과": "✓ 적합" if c.ok else "✕ 위반", "항목": c.item, "편성": c.value, "기준": c.limit,
                                 "근거": f"{c.ref} {rs.get(c.ref)['title'] if rs.get(c.ref) else ''}", "메모": c.note} for c in C]),
                  hide_index=True, width="stretch")
@@ -50,7 +50,7 @@ with t2:
     ui.section("연구원에서 실제로 겪은 실수 (사례 축적 중)")
     for p in A["pitfalls"]:
         st.markdown(f"- {p}")
-    st.caption("연구소 인터뷰에서 나온 사례는 '연구소 애로사항 접수' 메뉴로 모아 이 목록에 반영합니다.")
+    st.caption("연구소 인터뷰에서 나온 사례는 '연구소 애로사항 접수' 메뉴로 모아 이 목록에 반영함.")
 
 with t3:
     c1, c2 = st.columns(2)
@@ -78,6 +78,6 @@ with t3:
                 except Exception as e:  # noqa: BLE001
                     st.error(f"LLM 호출 실패: {e}")
     else:
-        st.caption("LLM 연결 전이라 템플릿 목차만 생성합니다. `.streamlit/secrets.toml`의 [llm] 설정 시 문단 초안까지 채웁니다.")
+        st.caption("LLM 연결 전이라 템플릿 목차만 생성함. `.streamlit/secrets.toml`의 [llm] 설정 시 문단 초안까지 채움.")
     st.text_area("연구개발계획서 목차 초안 (Markdown)", draft, height=380)
     st.download_button("초안 내려받기 (.md)", draft.encode("utf-8"), "연구개발계획서_초안.md")

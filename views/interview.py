@@ -6,7 +6,7 @@ import streamlit as st
 from core import loader, state, ui
 
 ui.header("지원 › 연구소 애로사항 접수", "연구소별 정산 애로사항 접수",
-          "연구소 인터뷰 내용을 같은 양식으로 모아 룰·체크리스트·학습데이터 보완에 씁니다.")
+          "연구소 인터뷰 내용을 같은 양식으로 모아 룰·체크리스트·학습데이터 보완에 활용함.")
 
 with st.expander("인터뷰 질문지 (진행자용)"):
     st.markdown(
@@ -31,13 +31,13 @@ with st.form("iv", clear_on_submit=True):
     who = st.text_input("작성자 (선택)")
     if st.form_submit_button("접수", type="primary"):
         if not body.strip():
-            st.warning("상황 설명을 입력해 주세요.")
+            st.warning("상황 설명 입력 필요")
         else:
             row = {"ts": datetime.now().isoformat(timespec="seconds"), "연구소": inst, "전문기관": agency, "단계": stage,
                    "유형": kind, "관련 비목": acct, "상황": body, "개선": idea, "작성자": who}
             df = pd.concat([state.read_interviews(), pd.DataFrame([row])], ignore_index=True)
             df.to_csv(state.INTERVIEWS, index=False, encoding="utf-8-sig")
-            st.success("접수했습니다.")
+            st.success("접수 완료")
 
 df = state.read_interviews()
 ui.section(f"접수 현황 ({len(df)}건)")
@@ -49,5 +49,5 @@ if len(df):
         st.bar_chart(df["유형"].value_counts(), horizontal=True, color="#00A0B0")
     st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch")
     st.download_button("접수 내역 내려받기 (csv)", df.to_csv(index=False).encode("utf-8-sig"), "rndhelp_interviews.csv")
-ui.note("Streamlit Community Cloud에 올리면 앱 재시작 시 파일 저장 내용이 지워질 수 있습니다. "
-        "시범 기간에는 주기적으로 CSV를 내려받거나, 운영 시 DB(예: 연구원 서버의 SQLite/PostgreSQL)로 바꾸세요.")
+ui.note("Streamlit Community Cloud에 올리면 앱 재시작 시 파일 저장 내용이 지워질 수 있음. "
+        "시범 기간에는 주기적으로 CSV를 내려받고, 운영 시 DB(예: 연구원 서버의 SQLite/PostgreSQL)로 전환 필요.")

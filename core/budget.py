@@ -87,5 +87,5 @@ def evaluate(tbl: pd.DataFrame, gov: int, gov_max: float, cash_min: float, indir
                          "인건비·장비비·재료비·SW활용비", "K09"))
     if ink.get("연구시설·장비비", 0) > 0:
         C.append(BudgetCheck(True, "현물 장비 사전 반영", "확인 필요", "보유현황 표에 장비 단위 기재", "K11",
-                             "장비별 자산번호·취득재원·산정근거를 계획서 단계에서 확정해 두면 정산 마찰이 크게 줄어듭니다"))
+                             "장비별 자산번호·취득재원·산정근거를 계획서 단계에서 확정해 두면 정산 마찰이 크게 줄어듦"))
     return s, C
