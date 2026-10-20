@@ -1,0 +1,122 @@
+import io
+from datetime import datetime
+
+import pandas as pd
+import streamlit as st
+
+from core import loader, mapper, state, ui
+
+ui.header("수행·정산 › 비목 매핑", "비목 매핑 (수공 정산시스템 → RCMS)",
+          "수공 계정과 적요를 넣으면 RCMS 비목·세목, 판정 근거, 필요한 증빙을 안내합니다. "
+          "룰과 AI가 일치하면 <b>자동확정</b>, 엇갈리거나 확신이 낮으면 <b>검토필요</b>로 표시합니다.")
+
+hm = state.get_mapper(state.model_version())
+acc = loader.accounts()
+acc_label = {r.code: f"{r.code} {r.name}" for r in acc.itertuples()}
+semok_idx = loader.semok_index()
+all_labels = [f"{v['bimok']} | {k}" for k, v in semok_idx.items()] + ["불인정 | 불인정(유흥·접대성)", "불인정 | 불인정(연구인력 지원비 제외 항목)"]
+
+tab1, tab2, tab3 = st.tabs(["단건 조회", "일괄 변환", "매핑 기준·모델"])
+
+# ───────────────────────── 단건 ─────────────────────────
+with tab1:
+    c1, c2 = st.columns([1, 1.4])
+    with c1:
+        code = st.selectbox("수공 계정", list(acc_label), index=list(acc_label).index("5260"),
+                            format_func=lambda c: acc_label[c])
+        desc = st.text_input("적요 / 품목", "수질 시료 PFAS 의뢰분석 20건")
+        vendor = st.text_input("거래처 (선택)", "한국화학융합시험연구원")
+        st.caption("예: 자문회의 도시락 · 에탄올 4L · AWS GPU 이용료 · Open Access APC · 기관 보유 장비 사용료")
+        hint = acc.set_index("code").loc[code, "note"]
+        if isinstance(hint, str) and hint:
+            ui.note(f"<b>{acc_label[code]}</b> — {hint}")
+    with c2:
+        if desc.strip():
+            r = hm.map_one(code, desc, vendor)
+            st.markdown(
+                f'<div class="kw-result"><div class="kw-kv">RCMS 비목 › 세목</div>'
+                f'<div class="path">{r.bimok} › {r.semok}</div>'
+                f'<div class="kw-kv">{ui.badge(r.status)} &nbsp; 근거: {r.basis}'
+                + (f" · 룰 {r.rule.id} ({r.rule.name}, 매칭어 '{r.rule.matched}')" if r.rule else "")
+                + "</div></div>", unsafe_allow_html=True)
+            if r.warn:
+                ui.note("⚠ " + r.warn, "warn")
+            st.markdown("**필요 증빙**")
+            for e in r.evidence or ["(세목별 증빙 정보 없음)"]:
+                st.checkbox(e, key=f"ev_{e}", value=False)
+            st.markdown("**AI 분류 상위 후보**")
+            top = pd.DataFrame([{"후보": lab.replace("|", " › "), "확률": p} for lab, p in r.ml_top])
+            st.dataframe(top, hide_index=True, width="stretch",
+                         column_config={"확률": st.column_config.ProgressColumn(format="percent", min_value=0, max_value=1)})
+
+            with st.expander("판정이 틀렸나요? 올바른 비목으로 교정해 학습시키기"):
+                fix = st.selectbox("올바른 RCMS 비목 | 세목", all_labels,
+                                   index=all_labels.index(f"{r.bimok} | {r.semok}") if f"{r.bimok} | {r.semok}" in all_labels else 0)
+                if st.button("교정 내용 저장", type="primary"):
+                    b, s = [x.strip() for x in fix.split("|", 1)]
+                    state.add_feedback({"account": code, "description": desc, "vendor": vendor,
+                                        "rcms_bimok": b, "rcms_semok": s, "ts": datetime.now().isoformat(timespec="seconds")})
+                    state.bump_model()
+                    st.success("저장했습니다. 모델을 다시 학습합니다.")
+                    st.rerun()
+
+# ───────────────────────── 일괄 ─────────────────────────
+with tab2:
+    st.markdown("수공 정산시스템에서 내려받은 집행내역(CSV/XLSX)을 올리면 전체를 RCMS 비목으로 변환합니다. "
+                "필수 열: `account`(계정코드), `description`(적요) · 선택: `vendor`, `amount`, `date`")
+    up = st.file_uploader("집행내역 파일", type=["csv", "xlsx"], key="bulk")
+    if up is not None:
+        df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
+    else:
+        st.caption("파일이 없으면 샘플 집행내역 22건으로 보여드립니다.")
+        df = loader.load_csv("sample_ledger.csv")
+    miss = {"account", "description"} - set(df.columns)
+    if miss:
+        st.error(f"필수 열이 없습니다: {', '.join(miss)}")
+    else:
+        out = mapper.results_to_frame(df, hm.map_many(df))
+        n = out["판정"].value_counts()
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("전체", f"{len(out)}건")
+        m2.metric("자동확정", f"{n.get('자동확정', 0)}건")
+        m3.metric("검토필요", f"{n.get('검토필요', 0)}건")
+        m4.metric("불인정", f"{n.get('불인정', 0)}건")
+        sel = st.multiselect("판정 필터", ["자동확정", "검토필요", "불인정"], default=["자동확정", "검토필요", "불인정"])
+        view = out[out["판정"].isin(sel)]
+        cols = [c for c in ["판정", "date", "account", "description", "vendor", "amount", "RCMS 비목", "RCMS 세목", "근거", "AI 확신도", "주의", "필요 증빙"] if c in view.columns]
+        st.dataframe(ui.style_status(view[cols], "판정"), hide_index=True, width="stretch", height=420,
+                     column_config={"amount": st.column_config.NumberColumn("금액", format="localized"),
+                                    "account": "계정", "description": "적요", "vendor": "거래처", "date": "일자",
+                                    "AI 확신도": st.column_config.NumberColumn(format="%.2f")})
+        buf = io.BytesIO()
+        out.to_excel(buf, index=False)
+        st.download_button("RCMS 비목 변환 결과 내려받기 (xlsx)", buf.getvalue(), "rcms_mapping.xlsx",
+                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+# ───────────────────────── 기준·모델 ─────────────────────────
+with tab3:
+    ui.section("수공 계정 기본 대응표 (샘플)")
+    st.dataframe(acc.rename(columns={"code": "계정코드", "name": "계정명", "type": "구분",
+                                     "default_rcms_bimok": "기본 RCMS 비목", "note": "비고"}),
+                 hide_index=True, width="stretch")
+    ui.section("룰 목록")
+    rules = pd.DataFrame([{"ID": r["id"], "이름": r["name"], "대상 계정": ", ".join(r.get("accounts", [])) or "전체",
+                           "키워드": ", ".join(r["patterns"][:8]), "RCMS": f"{r['bimok']} › {r['semok']}",
+                           "우선순위": r.get("priority"), "검증": "✓" if r.get("verified", True) else "확인필요"}
+                          for r in loader.mapping_rules()])
+    st.dataframe(rules, hide_index=True, width="stretch")
+    ui.section("AI 분류 모델")
+    m = hm.model
+    c1, c2, c3 = st.columns(3)
+    c1.metric("학습 집행건", f"{m.n_train:,}")
+    c2.metric("담당자 교정", f"{m.n_feedback:,}")
+    c3.metric("검증 정확도(20% 홀드아웃)", f"{m.holdout_acc:.1%}")
+    ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. 현재는 가상 학습데이터라 정확도가 높게 나옵니다. "
+            "실제 운영에서는 <b>과거 수공 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 다시 학습하세요 "
+            "(<code>data/train_ledger.csv</code> 교체). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됩니다.")
+    fb = state.read_feedback()
+    if len(fb):
+        st.dataframe(fb, hide_index=True, width="stretch")
+    if st.button("모델 다시 학습"):
+        state.bump_model()
+        st.rerun()

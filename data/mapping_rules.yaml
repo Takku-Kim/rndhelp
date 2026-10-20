@@ -1,0 +1,184 @@
+# 수공 정산시스템 계정 + 적요(텍스트) → RCMS 비목/세목 매핑 룰
+# - accounts: 적용 대상 수공 계정코드(비우면 전 계정)
+# - patterns: 적요/품목/거래처 텍스트에 대한 정규식(하나라도 매칭되면 후보)
+# - exclude : 매칭되면 이 룰 제외
+# - priority: 동시 매칭 시 높은 값 우선
+# - warn    : 매핑과 함께 띄울 정산 주의 문구
+# ※ 계정코드는 샘플(가상). 실제 수공 ERP 계정과 연구소 인터뷰 결과로 보완 예정.
+
+rules:
+  - id: R-MEET-FOOD
+    name: 회의 식대
+    accounts: ["5220", "5230"]
+    patterns: ["식대", "식사", "도시락", "다과", "케이터링", "오찬", "만찬"]
+    exclude: ["주류", "맥주", "소주", "와인"]
+    bimok: 연구활동비
+    semok: 회의비
+    priority: 90
+    warn: "참여연구자만 참석한 회의의 식비는 계상 불가 — 과제 미참여자 참석 여부 기재 (제25조④)"
+  - id: R-MEET
+    name: 회의 개최
+    accounts: ["5220"]
+    patterns: ["회의", "자문", "워크숍", "세미나 개최", "회의실"]
+    bimok: 연구활동비
+    semok: 회의비
+    priority: 60
+  - id: R-ENTERTAIN
+    name: 접대성 경비
+    accounts: []
+    patterns: ["주류", "맥주", "소주", "와인", "노래", "유흥", "골프", "선물"]
+    bimok: 불인정
+    semok: 불인정(유흥·접대성)
+    priority: 100
+    warn: "주류 등 유흥성 경비는 국가과제 계상 불가 (제21조④)"
+  - id: R-ANALYSIS
+    name: 외부 분석·시험 의뢰
+    accounts: ["5260", "5310", "5320"]
+    patterns: ["분석", "시험의뢰", "성적서", "검사의뢰", "공인시험", "측정의뢰", "의뢰분석", "NMR", "LC-MS", "GC-MS", "ICP", "TOC 분석", "미생물 분석", "유전체", "시퀀싱"]
+    bimok: 연구활동비
+    semok: 외부 전문기술 활용비
+    priority: 80
+    warn: "외부 전문기술 활용비는 직접비(현물 포함)의 40% 이내 (제25조②)"
+  - id: R-SERVICE
+    name: 외부 용역(기술 활용)
+    accounts: ["5320"]
+    patterns: ["용역", "컨설팅", "설계", "조사 용역", "데이터 구축", "라벨링", "개발 용역", "번역"]
+    exclude: ["위탁연구", "공동연구"]
+    bimok: 연구활동비
+    semok: 외부 전문기술 활용비
+    priority: 70
+    warn: "연구개발 일부를 맡기는 성격이면 위탁연구개발비로 분류 — 계획서 반영 여부 확인"
+  - id: R-CONSIGN
+    name: 위탁연구
+    accounts: ["5320", "5350"]
+    patterns: ["위탁연구", "위탁과제", "연구위탁", "위탁협약"]
+    bimok: 위탁연구개발비
+    semok: 위탁연구개발비
+    priority: 85
+    warn: "위탁연구개발비는 직접비의 40% 이내, 계획서에 반영된 위탁기관만"
+  - id: R-IP
+    name: 지식재산 출원·등록
+    accounts: ["5260", "5410"]
+    patterns: ["특허", "출원", "등록료", "변리", "PCT", "상표", "지식재산", "프로그램 등록", "저작권 등록", "기술가치평가"]
+    bimok: 연구활동비
+    semok: 지식재산 창출 활동비
+    priority: 85
+  - id: R-PAPER
+    name: 논문 게재·교정
+    accounts: ["5250", "5260", "5420"]
+    patterns: ["게재료", "게재비", "APC", "open access", "오픈액세스", "영문교정", "영문 교정", "논문교정", "editing"]
+    bimok: 연구활동비
+    semok: 그 밖의 비용
+    priority: 80
+    warn: "논문 게재료 세목은 전문기관 RCMS 화면에서 최종 확인 (지식재산 창출 활동비로 받는 기관 있음)"
+    verified: false
+  - id: R-CLOUD
+    name: 클라우드·GPU 이용
+    accounts: ["5260", "5330", "5270"]
+    patterns: ["클라우드", "AWS", "Azure", "GCP", "NCP", "네이버클라우드", "KT클라우드", "GPU 서버", "GPU 인스턴스", "컴퓨팅 이용"]
+    bimok: 연구활동비
+    semok: 클라우드컴퓨팅서비스 활용비
+    priority: 85
+  - id: R-SW
+    name: 소프트웨어 라이선스·구독
+    accounts: ["5330", "5260", "5240"]
+    patterns: ["라이선스", "license", "구독", "MATLAB", "ArcGIS", "HEC-RAS", "SWMM", "Origin", "SPSS", "AutoCAD", "Office 365", "소프트웨어", "SW 구매", "GitHub", "Copilot", "ChatGPT", "Claude"]
+    bimok: 연구활동비
+    semok: 소프트웨어 활용비
+    priority: 75
+  - id: R-TRAVEL
+    name: 출장
+    accounts: ["5210"]
+    patterns: ["출장", "KTX", "SRT", "항공", "숙박", "일비", "유류", "통행료", "현장조사", "택시"]
+    bimok: 연구활동비
+    semok: 출장비
+    priority: 70
+  - id: R-REAGENT
+    name: 시약·실험 소모품
+    accounts: ["5240", "5310"]
+    patterns: ["시약", "표준용액", "표준물질", "필터", "여과지", "배지", "reagent", "칼럼", "column", "바이알", "vial", "피펫", "팁", "장갑", "교정가스", "표준가스", "센서 소모품", "전극", "멤브레인 시편", "시료병", "채수병"]
+    bimok: 연구재료비
+    semok: 연구재료 구입비
+    priority: 75
+  - id: R-PROTO
+    name: 시제품·시작품 제작
+    accounts: ["5310", "5240", "5320"]
+    patterns: ["시제품", "시작품", "제작", "가공", "PCB", "3D 프린팅", "3D프린팅", "목업", "파일럿 설비 제작", "테스트베드 제작"]
+    exclude: ["영상 제작", "홍보물 제작", "보고서 제작"]
+    bimok: 연구재료비
+    semok: 연구재료 제작비
+    priority: 72
+  - id: R-EQUIP-BUY
+    name: 연구장비 구입(자산)
+    accounts: ["1510", "1520"]
+    patterns: [".*"]
+    bimok: 연구시설·장비비
+    semok: 연구시설·장비 구축(구입·설치·임차)
+    priority: 65
+    warn: "계획서 대비 3천만원 이상 장비 신규·변경은 전문기관 사전승인. 납품·설치 완료 시점 확인"
+  - id: R-EQUIP-RENT
+    name: 연구장비 임차
+    accounts: ["5280"]
+    patterns: ["장비 임차", "장비임차", "렌탈", "대여", "드론", "측정기 임차", "계측기 임차", "ADCP"]
+    exclude: ["회의실", "사무실", "차량"]
+    bimok: 연구시설·장비비
+    semok: 연구시설·장비 구축(구입·설치·임차)
+    priority: 70
+    verified: false
+  - id: R-EQUIP-INTERNAL
+    name: 내부 보유장비 사용료
+    accounts: ["5280", "5260", "5340"]
+    patterns: ["내부 장비 사용료", "자체 장비 사용료", "공동활용 장비", "기관 보유 장비", "장비사용료"]
+    bimok: 연구시설·장비비
+    semok: 연구시설·장비 사용·운영
+    priority: 88
+    warn: "내부 보유 장비 사용료 지급은 원칙적 불인정(전문기관 인정 시 예외). 계획서 미반영 내부 장비 사용 불가 — 현물 계상 여부와 중복 확인"
+    verified: false
+  - id: R-REPAIR
+    name: 연구장비 수리·유지
+    accounts: ["5340"]
+    patterns: ["수리", "유지보수", "교정", "검교정", "점검", "부품 교체"]
+    bimok: 연구시설·장비비
+    semok: 연구시설·장비 사용·운영
+    priority: 60
+    verified: false
+  - id: R-LABOPS
+    name: 연구실 운영 소모품
+    accounts: ["5240", "5250", "5270"]
+    patterns: ["사무용품", "토너", "복사용지", "문구", "USB", "외장하드", "연구노트", "보고서 인쇄", "제본"]
+    bimok: 연구활동비
+    semok: 연구실운영비
+    priority: 55
+  - id: R-EDU
+    name: 학회·교육 참가
+    accounts: ["5290", "5420"]
+    patterns: ["학회 등록", "등록비", "참가비", "교육비", "교육 수강", "컨퍼런스", "conference", "심포지엄"]
+    exclude: ["종신회원", "평생회원", "학위"]
+    bimok: 연구활동비
+    semok: 연구인력 지원비
+    priority: 65
+    warn: "과제와 무관한 학회·교육, 종신 학회비, 학위과정 비용은 불인정 (제25조⑭)"
+  - id: R-LIFETIME
+    name: 종신·학위 비용
+    accounts: []
+    patterns: ["종신회원", "평생회원", "학위과정", "등록금"]
+    bimok: 불인정
+    semok: 불인정(연구인력 지원비 제외 항목)
+    priority: 95
+    warn: "종신 학회비, 학위과정 비용은 불인정 (제25조⑭)"
+  - id: R-SALARY
+    name: 참여연구원 인건비
+    accounts: ["5110"]
+    patterns: [".*"]
+    bimok: 인건비
+    semok: 내부인건비
+    priority: 50
+    warn: "참여연구자현황표의 참여율·기간과 일치해야 하며, 현물/현금 구분 기재"
+  - id: R-ALLOW
+    name: 연구수당
+    accounts: ["5120"]
+    patterns: ["연구수당", "성과수당", "연구 수당"]
+    bimok: 연구수당
+    semok: 연구수당
+    priority: 70
+    warn: "수정인건비의 20% 이내, 1인 70% 초과 불가 (제26조)"
