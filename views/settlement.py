@@ -29,7 +29,7 @@ if up is not None:
     df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
 else:
     df = loader.load_csv("sample_ledger.csv")
-    st.caption("파일을 올리지 않으면 例示 집행내역 22건으로 점검합니다.")
+    st.caption("파일을 올리지 않으면 예시 집행내역 22건으로 점검합니다.")
 
 mapped = mapper.results_to_frame(df, hm.map_many(df)).reset_index(drop=True)
 p = checks.ProjectInfo(start, end, int(direct_total), int(personnel))

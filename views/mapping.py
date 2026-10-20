@@ -68,7 +68,7 @@ with tab2:
     if up is not None:
         df = pd.read_excel(up, dtype={"account": str}) if up.name.endswith("xlsx") else pd.read_csv(up, dtype={"account": str}, encoding="utf-8-sig")
     else:
-        st.caption("파일이 없으면 例示 집행내역 22건으로 보여드립니다.")
+        st.caption("파일이 없으면 예시 집행내역 22건으로 보여드립니다.")
         df = loader.load_csv("sample_ledger.csv")
     miss = {"account", "description"} - set(df.columns)
     if miss:
