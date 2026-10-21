@@ -6,21 +6,21 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from . import loader, mapper, search
+from . import loader, mapper, search, store
 
 FEEDBACK = loader.DATA / "feedback.csv"
 INTERVIEWS = loader.DATA / "interviews.csv"
 
 
 def read_feedback() -> pd.DataFrame:
-    if FEEDBACK.exists():
-        return pd.read_csv(FEEDBACK, encoding="utf-8-sig", dtype={"account": str})
-    return pd.DataFrame(columns=["account", "description", "vendor", "rcms_bimok", "rcms_semok", "ts"])
+    df = store.read("feedback.csv", dtype={"account": str})
+    if df.empty:
+        return pd.DataFrame(columns=["account", "description", "vendor", "rcms_bimok", "rcms_semok", "ts"])
+    return df
 
 
-def add_feedback(row: dict) -> None:
-    df = pd.concat([read_feedback(), pd.DataFrame([row])], ignore_index=True)
-    df.to_csv(FEEDBACK, index=False, encoding="utf-8-sig")
+def add_feedback(row: dict) -> tuple[bool, str]:
+    return store.append("feedback.csv", row)
 
 
 @st.cache_resource(show_spinner="비목 분류 모델 학습 중…")
@@ -45,6 +45,8 @@ def bump_model() -> None:
 
 
 def read_interviews() -> pd.DataFrame:
-    if Path(INTERVIEWS).exists():
-        return pd.read_csv(INTERVIEWS, encoding="utf-8-sig")
-    return pd.DataFrame()
+    return store.read("interviews.csv")
+
+
+def add_interview(row: dict) -> tuple[bool, str]:
+    return store.append("interviews.csv", row)

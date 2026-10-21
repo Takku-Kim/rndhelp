@@ -56,11 +56,14 @@ with tab1:
                                    index=all_labels.index(f"{r.bimok} | {r.semok}") if f"{r.bimok} | {r.semok}" in all_labels else 0)
                 if st.button("피드백 저장", type="primary"):
                     b, s = [x.strip() for x in fix.split("|", 1)]
-                    state.add_feedback({"account": code, "description": desc, "vendor": vendor,
+                    ok, msg = state.add_feedback({"account": code, "description": desc, "vendor": vendor,
                                         "rcms_bimok": b, "rcms_semok": s, "ts": datetime.now().isoformat(timespec="seconds")})
                     state.bump_model()
-                    st.success("저장 완료 — 모델 재학습")
+                    st.session_state["fb_msg"] = (ok, msg)
                     st.rerun()
+        if "fb_msg" in st.session_state:
+            _ok, _msg = st.session_state.pop("fb_msg")
+            (st.success if _ok else st.warning)("피드백 저장 완료 — 모델 재학습. " + _msg)
 
 # ───────────────────────── 일괄 ─────────────────────────
 with tab2:

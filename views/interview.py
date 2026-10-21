@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import streamlit as st
 
-from core import loader, state, ui
+from core import loader, state, store, ui
 
 ui.header("지원 › 연구소별 의견/피드백 공간", "연구소별 의견/피드백 공간",
           "연구소 인터뷰 내용을 같은 양식으로 모아 룰·체크리스트·학습데이터 보완에 활용함.")
@@ -35,9 +35,8 @@ with st.form("iv", clear_on_submit=True):
         else:
             row = {"ts": datetime.now().isoformat(timespec="seconds"), "연구소": inst, "전문기관": agency, "단계": stage,
                    "유형": kind, "관련 비목": acct, "상황": body, "개선": idea, "작성자": who}
-            df = pd.concat([state.read_interviews(), pd.DataFrame([row])], ignore_index=True)
-            df.to_csv(state.INTERVIEWS, index=False, encoding="utf-8-sig")
-            st.success("접수 완료")
+            ok, msg = state.add_interview(row)
+            (st.success if ok else st.warning)("접수 완료 — " + msg)
 
 df = state.read_interviews()
 ui.section(f"접수 현황 ({len(df)}건)")
@@ -49,5 +48,8 @@ if len(df):
         st.bar_chart(df["유형"].value_counts(), horizontal=True, color="#00A0B0")
     st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch")
     st.download_button("접수 내역 내려받기 (csv)", df.to_csv(index=False).encode("utf-8-sig"), "rndhelp_interviews.csv")
-ui.note("Streamlit Community Cloud에 올리면 앱 재시작 시 파일 저장 내용이 지워질 수 있음. "
-        "시범 기간에는 주기적으로 CSV를 내려받고, 운영 시 DB(예: 연구원 서버의 SQLite/PostgreSQL)로 전환 필요.")
+if store.mode() == "github":
+    ui.note("접수 내용은 비공개 데이터 저장소에 즉시 보관되며, 앱 재시작·재배포와 무관하게 유지됨.")
+else:
+    ui.note("<b>⚠ 영구 저장소 미연결</b> — 현재 접수 내용은 서버 임시 파일에만 저장되어 앱 재시작·재배포 시 사라질 수 있음. "
+            "접수 후 반드시 위 '접수 내역 내려받기'로 보관할 것. (README의 '의견·피드백 영구 보관' 참고)", "warn")

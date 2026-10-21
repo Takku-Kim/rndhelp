@@ -58,6 +58,19 @@ model    = "<모델명>"
 4. `data/regulations.yaml` — 전문기관별 지침(KEITI 사례집 등) 조문 추가, 기준일 관리
 5. 의견·피드백 데이터 저장소를 파일 → DB로 전환 (Cloud는 재시작 시 파일 초기화)
 
+## 의견·피드백 영구 보관 (interviews.csv / feedback.csv)
+Streamlit Cloud 파일은 재시작·재배포 때 초기화되므로 `core/store.py` 가 접수 즉시 **비공개 GitHub 데이터 저장소**에 커밋한다.
+1. 비공개(private) 저장소 생성 (예: `newcave/rndhelp-data`)
+2. 해당 저장소 한정 Fine-grained token 발급 (Contents: Read and write)
+3. Streamlit Cloud → App settings → Secrets 에 입력
+```toml
+[storage]
+repo   = "newcave/rndhelp-data"
+token  = "github_pat_..."
+branch = "main"
+```
+미설정이면 서버 임시 파일에만 저장되며 의견 화면에 경고가 표시된다 (CSV 내려받기로 수동 보관).
+
 ## 근거 자료 (요약 반영, 원문 확인 필요)
 - 과기정통부 「국가연구개발사업 연구개발비 사용 기준」 2026.5.6. 개정 (연구혁신비 신설, 회의비 식비 완화)
 - KEITI 「환경기술개발사업 연구개발비 관리 및 Q&A 사례집」(2025.12)

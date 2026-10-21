@@ -46,3 +46,46 @@ def test_budget_default_passes():
 def test_search_finds_meeting_rule():
     hits, _ = search.RegSearch().search("회의비 식대 참여연구원만")
     assert hits[0].id == "K03"
+
+
+def test_store_github_append(monkeypatch, tmp_path):
+    """영구 저장소(GitHub) 모드: 접수 시 원격 파일에 행이 추가되고 sha 충돌 시 재시도."""
+    import base64
+    import requests
+    from core import store
+
+    remote = {"content": None, "sha": "s0", "puts": 0, "conflict_once": True}
+
+    class R:
+        def __init__(self, code, js=None):
+            self.status_code, self._js = code, js or {}
+            self.response = self
+        def json(self): return self._js
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(response=self)
+
+    def fake_get(url, **kw):
+        if remote["content"] is None:
+            return R(404)
+        return R(200, {"content": base64.b64encode(remote["content"]).decode(), "sha": remote["sha"]})
+
+    def fake_put(url, **kw):
+        if remote["conflict_once"]:
+            remote["conflict_once"] = False
+            return R(409)
+        remote["content"] = base64.b64decode(kw["json"]["content"])
+        remote["sha"] = f"s{remote['puts'] + 1}"
+        remote["puts"] += 1
+        return R(200)
+
+    monkeypatch.setattr(store, "_cfg", lambda: {"repo": "x/y", "token": "t"})
+    monkeypatch.setattr(store.requests, "get", fake_get)
+    monkeypatch.setattr(store.requests, "put", fake_put)
+    monkeypatch.setattr(store, "_local_path", lambda name: tmp_path / name)
+    monkeypatch.setattr(store._cached_remote, "clear", lambda: None, raising=False)
+    ok, _ = store.append("interviews.csv", {"연구소": "AI연구소", "상황": "테스트"})
+    assert ok and remote["puts"] == 1
+    ok, _ = store.append("interviews.csv", {"연구소": "물에너지연구소", "상황": "두번째"})
+    text = remote["content"].decode("utf-8-sig")
+    assert ok and "AI연구소" in text and "물에너지연구소" in text
