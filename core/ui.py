@@ -62,6 +62,9 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-result .path {{ font-size:1.15rem; font-weight:700; color:{KW_NAVY}; }}
 .kw-kv {{ color:#4E5968; font-size:.86rem; margin-top:6px; }}
 .kw-foot {{ color:#8B95A1; font-size:.76rem; border-top:1px solid #E5E8EB; margin-top:28px; padding-top:8px; }}
+.kw-click {{ text-decoration:none !important; display:block; cursor:pointer; transition:border-color .15s, box-shadow .15s; }}
+.kw-click:hover {{ border-color:{KW_BLUE}; box-shadow:0 1px 6px rgba(0,91,172,.18); }}
+.kw-click .sub b {{ color:{KW_BLUE}; }}
 .kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
 @media (max-width: 640px) {{ .kw-grid {{ grid-template-columns:repeat(2,1fr); gap:8px; }} .kw-grid .kw-card .val {{ font-size:1.2rem; }} }}
 div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
@@ -100,11 +103,17 @@ def card(label: str, value: str, sub: str = "") -> None:
     )
 
 
-def card_grid(items: list[tuple[str, str, str]]) -> None:
-    """카드 여러 개를 한 줄(모바일은 2열)로."""
-    cells = "".join(
-        f'<div class="kw-card"><div class="lbl">{html.escape(a)}</div><div class="val">{html.escape(b)}</div>'
-        f'<div class="sub">{html.escape(c)}</div></div>' for a, b, c in items)
+def card_grid(items: list[tuple]) -> None:
+    """카드 여러 개를 한 줄(모바일은 2열)로. 4번째 값(href)이 있으면 클릭 가능한 카드."""
+    cells = ""
+    for it in items:
+        a, b, c = it[:3]
+        body = (f'<div class="lbl">{html.escape(a)}</div><div class="val">{html.escape(b)}</div>'
+                f'<div class="sub">{html.escape(c)}</div>')
+        if len(it) > 3 and it[3]:
+            cells += f'<a class="kw-card kw-click" href="{it[3]}" target="_self">{body}</a>'
+        else:
+            cells += f'<div class="kw-card">{body}</div>'
     st.markdown(f'<div class="kw-grid">{cells}</div>', unsafe_allow_html=True)
 
 

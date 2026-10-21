@@ -1,17 +1,33 @@
 import streamlit as st
 
-from core import loader, state, ui
+from core import export, loader, state, ui
 
 ui.header("", "국가 수탁 R&D 단계별 지원",
           "국가 수탁 R&D의 제안서 작성 → 협약 → 과제 수행 → 정산 등 전 과정에서 필요한 규정 확인, 비목 매핑, "
           "정산 사전점검, 현물 적정성 점검을 지원하는 연구원용 시범 서비스.<br>"
           "(룰 기반 판정과 과거 집행내역 등을 학습한 AI 분류를 복합 적용)")
 
+
+
+@st.dialog("AI 학습데이터", width="large")
+def _train_dialog():
+    st.caption("K-water 계정 + 적요 + 거래처 → RCMS 비목·세목 (AI 분류 학습에 사용하는 집행내역)")
+    df = export.train_frame()
+    st.dataframe(df, hide_index=True, width="stretch", height=380,
+                 column_config={"금액(원)": st.column_config.NumberColumn(format="localized")})
+    st.download_button("엑셀로 내려받기 (xlsx)", export.train_xlsx(), "RND-HELP_AI학습데이터.xlsx",
+                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary")
+
+
+if st.query_params.get("data") == "train":
+    del st.query_params["data"]
+    _train_dialog()
+
 hm = state.get_mapper(state.model_version())
 iv = state.read_interviews()
 ui.card_grid([
     ("매핑 룰", f"{len(loader.mapping_rules())}개", "K-water 계정 × 적요 키워드"),
-    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함"),
+    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함 · 클릭하여 보기", "?data=train"),
     ("규정 지식베이스", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등"),
     ("접수된 의견·피드백", f"{len(iv)}건", "7개 연구소 인터뷰"),
 ])
