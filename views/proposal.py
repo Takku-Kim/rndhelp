@@ -3,7 +3,7 @@ import streamlit as st
 
 from core import budget, llm, loader, state, ui
 
-ui.header("과제 준비 › 제안서 작성 도우미", "제안서 작성 도우미",
+ui.header("과제 준비 › 제안서 작성 도우미", "제안서 작성 지원",
           "전문기관별 체크리스트와 연구개발비 편성 한도를 확인하고, 연구개발계획서 목차 초안을 작성함. "
           "정산 마찰의 상당수는 <b>제안 단계의 편성·현물 반영</b>에서 시작됨.")
 
