@@ -65,6 +65,22 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-click {{ text-decoration:none !important; display:block; cursor:pointer; transition:border-color .15s, box-shadow .15s; }}
 .kw-click:hover {{ border-color:{KW_BLUE}; box-shadow:0 1px 6px rgba(0,91,172,.18); }}
 .kw-click .sub b {{ color:{KW_BLUE}; }}
+.kw-beta {{ display:inline-block; background:#FFF4E0; color:#9A5B00; border:1px solid #F3D9A8; border-radius:10px; padding:0 8px; font-size:.72rem; font-weight:700; margin-left:8px; vertical-align:middle; }}
+.kw-flow {{ display:flex; align-items:stretch; gap:8px; margin:6px 0 4px 0; }}
+.kw-flow .col {{ display:flex; flex-direction:column; gap:6px; flex:1.2; }}
+.kw-flow .box {{ border:1px solid #DDE3EA; border-radius:6px; padding:9px 11px; background:#fff; font-weight:700; font-size:.9rem; color:#16202C; display:flex; flex-direction:column; justify-content:center; flex:1; }}
+.kw-flow .box small {{ font-weight:400; color:#6B7684; font-size:.74rem; margin-top:2px; }}
+.kw-flow .src {{ background:#F4F6F9; }}
+.kw-flow .opt {{ border-style:dashed; }}
+.kw-flow .store {{ background:#E8F0FB; border-color:#B9D2F0; flex:1; }}
+.kw-flow .adp {{ background:{KW_NAVY}; color:#fff; border-color:{KW_NAVY}; flex:1; }}
+.kw-flow .adp small {{ color:#C9D8EA; }}
+.kw-flow .dst {{ background:#E6F4EA; border-color:#BFE0C8; flex:1; }}
+.kw-flow .arr {{ display:flex; align-items:center; color:#8B95A1; font-size:1.3rem; }}
+@media (max-width: 640px) {{ .kw-flow {{ flex-direction:column; }} .kw-flow .arr {{ justify-content:center; transform:rotate(90deg); height:1.4rem; }} }}
+.kw-step {{ display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid #EEF1F4; }}
+.kw-step .no {{ background:{KW_BLUE}; color:#fff; border-radius:50%; min-width:24px; height:24px; text-align:center; line-height:24px; font-size:.8rem; font-weight:700; }}
+.kw-step .tx b {{ color:#16202C; }} .kw-step .tx span {{ color:#4E5968; font-size:.86rem; }}
 .kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
 @media (max-width: 640px) {{ .kw-grid {{ grid-template-columns:repeat(2,1fr); gap:8px; }} .kw-grid .kw-card .val {{ font-size:1.2rem; }} }}
 div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
