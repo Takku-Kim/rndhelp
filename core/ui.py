@@ -82,8 +82,8 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-step .no {{ background:{KW_BLUE}; color:#fff; border-radius:50%; min-width:24px; height:24px; text-align:center; line-height:24px; font-size:.8rem; font-weight:700; }}
 .kw-step .tx b {{ color:#16202C; }} .kw-step .tx span {{ color:#4E5968; font-size:.86rem; }}
 /* 사이드바: 정산 Adaptor 는 비목 매핑의 하위 메뉴처럼 들여쓰기하고 글씨를 작게 */
-[data-testid="stSidebarNav"] a[href$="/adaptor"] {{ margin-left:1.6rem; }}
-[data-testid="stSidebarNav"] a[href$="/adaptor"] p {{ font-size:.8rem !important; }}
+[data-testid="stSidebarNav"] a[href$="/adaptor"], [data-testid="stSidebarNav"] a[href*="/proposal-"] {{ margin-left:1.6rem; }}
+[data-testid="stSidebarNav"] a[href$="/adaptor"] p, [data-testid="stSidebarNav"] a[href*="/proposal-"] p {{ font-size:.8rem !important; }}
 .kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
 @media (max-width: 640px) {{ .kw-grid {{ grid-template-columns:repeat(2,1fr); gap:8px; }} .kw-grid .kw-card .val {{ font-size:1.2rem; }} }}
 div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
