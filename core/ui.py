@@ -81,7 +81,8 @@ def setup_page() -> None:
 
 
 def header(crumb: str, title: str, desc: str = "") -> None:
-    st.markdown(f'<div class="kw-crumb">{html.escape(crumb)}</div>', unsafe_allow_html=True)
+    if crumb:
+        st.markdown(f'<div class="kw-crumb">{html.escape(crumb)}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="kw-title">{html.escape(title)}</div>', unsafe_allow_html=True)
     if desc:
         st.markdown(f'<div class="kw-desc">{desc}</div>', unsafe_allow_html=True)
