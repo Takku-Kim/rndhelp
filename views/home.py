@@ -2,10 +2,10 @@ import streamlit as st
 
 from core import loader, state, ui
 
-ui.header("", "국가 수탁 R&D 단계별 지원 시스템",
-          "국가 수탁 R&D의 <b>제안서 작성 → 협약 → 과제 수행 → 정산</b> 등 전 과정에서 필요한 규정 확인, 비목 매핑, "
-          "정산 사전점검, 현물 적정성 점검을 지원하는 연구원용 시범 서비스임. "
-          "룰 기반 판정과 과거 집행내역으로 학습한 AI 분류를 함께 사용함.")
+ui.header("", "국가 수탁 R&D 단계별 지원",
+          "국가 수탁 R&D의 제안서 작성 → 협약 → 과제 수행 → 정산 등 전 과정에서 필요한 규정 확인, 비목 매핑, "
+          "정산 사전점검, 현물 적정성 점검을 지원하는 연구원용 시범 서비스.<br>"
+          "룰 기반 판정과 과거 집행내역으로 학습한 AI 분류를 복합 적용.")
 
 hm = state.get_mapper(state.model_version())
 iv = state.read_interviews()
