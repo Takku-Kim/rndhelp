@@ -39,7 +39,7 @@ with st.form("iv", clear_on_submit=True):
             (st.success if ok else st.warning)("접수 완료 — " + msg)
 
 df = state.read_interviews()
-ui.section(f"접수 현황 ({len(df)}건)")
+ui.section(f"의견·피드백 현황 ({len(df)}건)")
 if len(df):
     c1, c2 = st.columns(2)
     with c1:
