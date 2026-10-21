@@ -22,6 +22,7 @@ tab1, tab2, tab3 = st.tabs(["단건 조회", "일괄 변환", "매핑 기준·�
 with tab1:
     c1, c2 = st.columns([1, 1.4])
     with c1:
+        ui.section("K-water 정산시스템 (입력)")
         code = st.selectbox("K-water 계정", list(acc_label), index=list(acc_label).index("5260"),
                             format_func=lambda c: acc_label[c])
         desc = st.text_input("적요 / 품목", "수질 시료 PFAS 의뢰분석 20건")
@@ -31,6 +32,7 @@ with tab1:
         if isinstance(hint, str) and hint:
             ui.note(f"<b>{acc_label[code]}</b> — {hint}")
     with c2:
+        ui.section("RCMS (매핑 결과)")
         if desc.strip():
             r = hm.map_one(code, desc, vendor)
             st.markdown(

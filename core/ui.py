@@ -58,7 +58,7 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-warn {{ background:#FFF8EC; border:1px solid #F3D9A8; border-radius:4px; padding:9px 12px;
            color:#5A4100; font-size:.86rem; }}
 .kw-badge {{ display:inline-block; padding:1px 8px; border-radius:10px; font-size:.78rem; font-weight:600; }}
-.kw-result {{ border:1px solid #DDE3EA; border-radius:6px; padding:14px 16px; background:#fff; }}
+.kw-result {{ border:1px solid #DDE3EA; border-left:4px solid {KW_TEAL}; border-radius:6px; padding:14px 16px; background:#fff; }}
 .kw-result .path {{ font-size:1.15rem; font-weight:700; color:{KW_NAVY}; }}
 .kw-kv {{ color:#4E5968; font-size:.86rem; margin-top:6px; }}
 .kw-foot {{ color:#8B95A1; font-size:.76rem; border-top:1px solid #E5E8EB; margin-top:28px; padding-top:8px; }}
