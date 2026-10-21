@@ -36,7 +36,7 @@ def _rules_dialog():
 @st.dialog("규정 아카이브", width="large")
 def _archive_dialog():
     reg = loader.regulations()
-    st.caption("사용기준·KEITI 사례집 등 규정 요약 (원문 확인 필요)")
+    st.caption("사용기준·KEITI 사례집 등 규정 요약")
     df = pd.DataFrame([{"구분": it["category"], "제목": it["title"], "조항": it["article"],
                         "내용": " ".join(it["text"].split()),
                         "출처": reg["sources"].get(it["source"], {}).get("name", it["source"])}
