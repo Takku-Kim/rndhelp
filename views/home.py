@@ -33,7 +33,7 @@ def _rules_dialog():
     st.dataframe(df, hide_index=True, width="stretch", height=420)
 
 
-@st.dialog("아카이브", width="large")
+@st.dialog("규정 아카이브", width="large")
 def _archive_dialog():
     reg = loader.regulations()
     st.caption("사용기준·KEITI 사례집 등 규정 요약 (원문 확인 필요)")
@@ -65,7 +65,7 @@ iv = state.read_interviews()
 ui.card_grid([
     ("매핑 룰", f"{len(loader.mapping_rules())}개", "K-water 계정 × 적요 키워드", "?data=rules"),
     ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함", "?data=train"),
-    ("아카이브", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등", "?data=archive"),
+    ("규정 아카이브", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등", "?data=archive"),
     ("접수된 의견·피드백", f"{len(iv)}건", "7개 연구소 인터뷰 등", "?data=feedback"),
 ])
 
