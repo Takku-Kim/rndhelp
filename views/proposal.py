@@ -78,6 +78,6 @@ with t3:
                 except Exception as e:  # noqa: BLE001
                     st.error(f"LLM 호출 실패: {e}")
     else:
-        st.caption("LLM 연결 전이라 템플릿 목차만 생성함. `.streamlit/secrets.toml`의 [llm] 설정 시 문단 초안까지 채움.")
+        st.caption("LLM 에이전트 연결 중 (금회 템플릿 목차만 생성)")
     st.text_area("연구개발계획서 목차 초안 (Markdown)", draft, height=380)
     st.download_button("초안 내려받기 (.md)", draft.encode("utf-8"), "연구개발계획서_초안.md")
