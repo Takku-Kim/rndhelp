@@ -39,11 +39,11 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 [data-testid="stSidebarNav"] span {{ font-size: 0.92rem; }}
 .kw-top {{
   display:flex; justify-content:space-between; align-items:center;
-  background:{KW_NAVY}; color:#fff; padding:10px 18px; border-radius:4px; margin-bottom:14px;
+  background:{KW_NAVY}; color:#fff; padding:16px 22px; border-radius:4px; margin-bottom:14px; gap:16px;
 }}
-.kw-top .brand {{ font-weight:700; font-size:1.02rem; letter-spacing:-0.2px; }}
-.kw-top .brand small {{ font-weight:400; opacity:.75; margin-left:8px; }}
-.kw-top .meta {{ font-size:.8rem; opacity:.8; }}
+.kw-top .sub {{ font-size:.82rem; opacity:.8; font-weight:400; }}
+.kw-top .brand {{ font-weight:800; font-size:1.55rem; letter-spacing:-0.4px; line-height:1.25; }}
+.kw-top .meta {{ font-size:.74rem; opacity:.7; text-align:right; line-height:1.5; }}
 .kw-crumb {{ color:#6B7684; font-size:.82rem; margin:-4px 0 2px 2px; }}
 .kw-title {{ font-size:1.35rem; font-weight:700; color:#16202C; margin:2px 0 4px 0; }}
 .kw-desc {{ color:#4E5968; font-size:.92rem; margin-bottom:12px; }}
@@ -73,9 +73,9 @@ div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
 def setup_page() -> None:
     st.markdown(CSS, unsafe_allow_html=True)
     st.markdown(
-        '<div class="kw-top"><div class="brand">K-water 연구원 &nbsp;|&nbsp; 국가R&D 과제관리 도우미'
-        '<small>RND-HELP · 시범운영</small></div>'
-        '<div class="meta">기준: 연구개발비 사용 기준 2026.5.6. 개정 반영</div></div>',
+        '<div class="kw-top"><div class="kw-top-l"><div class="sub">K-water 연구원 R&amp;D 지원 에이전트</div>'
+        '<div class="brand">국가 수탁 관리 시스템</div></div>'
+        '<div class="meta">RND-HELP · 시범운영<br>기준: 연구개발비 사용 기준 2026.5.6. 개정 반영</div></div>',
         unsafe_allow_html=True,
     )
 
