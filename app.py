@@ -31,7 +31,7 @@ pages = {
         st.Page("views/proposal.py", url_path="proposal", title="제안서 작성 지원 Tool", icon=":material/edit_document:"),
         st.Page("views/proposal_budget.py", url_path="proposal-budget", title="└ 연구비 편성 검증"),
         st.Page("views/proposal_check.py", url_path="proposal-check", title="└ 제출 전 체크리스트"),
-        st.Page("views/proposal_draft.py", url_path="proposal-draft", title="└ 계획서 초안 작성"),
+        st.Page("views/proposal_draft.py", url_path="proposal-draft", title="└ 계획서 초안 작성 (준비 중)"),
     ],
     "수행·정산": [
         st.Page("views/mapping.py", url_path="mapping", title="비목 매핑 (K-water↔RCMS)", icon=":material/swap_horiz:"),
