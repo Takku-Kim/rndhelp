@@ -90,7 +90,7 @@ def train_model(train: pd.DataFrame, feedback: pd.DataFrame | None = None, seed:
     if feedback is not None and len(feedback):
         fb = feedback[["account", "description", "vendor", "rcms_bimok", "rcms_semok"]].copy()
         n_fb = len(fb)
-        df = pd.concat([df] + [fb] * 3, ignore_index=True)  # 담당자 교정 건은 가중(×3)
+        df = pd.concat([df] + [fb] * 3, ignore_index=True)  # 담당자 피드백 건은 가중(×3)
     df["vendor"] = df["vendor"].fillna("")
     X = [_text(a, d, v, acc_names) for a, d, v in zip(df["account"].astype(str), df["description"], df["vendor"])]
     y = (df["rcms_bimok"] + LABEL_SEP + df["rcms_semok"]).tolist()

@@ -10,7 +10,7 @@ hm = state.get_mapper(state.model_version())
 iv = state.read_interviews()
 ui.card_grid([
     ("매핑 룰", f"{len(loader.mapping_rules())}개", "K-water 계정 × 적요 키워드"),
-    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 교정 {hm.model.n_feedback}건 포함"),
+    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함"),
     ("규정 지식베이스", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등"),
     ("접수된 애로사항", f"{len(iv)}건", "7개 연구소 인터뷰"),
 ])

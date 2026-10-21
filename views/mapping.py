@@ -49,10 +49,10 @@ with tab1:
             st.dataframe(top, hide_index=True, width="stretch",
                          column_config={"확률": st.column_config.ProgressColumn(format="percent", min_value=0, max_value=1)})
 
-            with st.expander("판정 오류 시 — 올바른 비목으로 교정·재학습"):
+            with st.expander("판정 오류 시 — 올바른 비목으로 피드백·재학습"):
                 fix = st.selectbox("올바른 RCMS 비목 | 세목", all_labels,
                                    index=all_labels.index(f"{r.bimok} | {r.semok}") if f"{r.bimok} | {r.semok}" in all_labels else 0)
-                if st.button("교정 내용 저장", type="primary"):
+                if st.button("피드백 저장", type="primary"):
                     b, s = [x.strip() for x in fix.split("|", 1)]
                     state.add_feedback({"account": code, "description": desc, "vendor": vendor,
                                         "rcms_bimok": b, "rcms_semok": s, "ts": datetime.now().isoformat(timespec="seconds")})
@@ -109,10 +109,10 @@ with tab3:
     m = hm.model
     c1, c2, c3 = st.columns(3)
     c1.metric("학습 집행건", f"{m.n_train:,}")
-    c2.metric("담당자 교정", f"{m.n_feedback:,}")
+    c2.metric("담당자 피드백", f"{m.n_feedback:,}")
     c3.metric("검증 정확도(20% 홀드아웃)", f"{m.holdout_acc:.1%}")
     ui.note("TF-IDF(문자 2~4gram) + 로지스틱 회귀. <b>과거 K-water 집행내역 ↔ RCMS 최종 등록 비목</b> 쌍으로 학습함 "
-            "(<code>data/train_ledger.csv</code>). 교정 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됨.")
+            "(<code>data/train_ledger.csv</code>). 피드백 내용은 <code>data/feedback.csv</code>에 쌓이고 3배 가중으로 반영됨.")
     fb = state.read_feedback()
     if len(fb):
         st.dataframe(fb, hide_index=True, width="stretch")

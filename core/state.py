@@ -36,7 +36,7 @@ def get_search() -> search.RegSearch:
 
 
 def model_version() -> int:
-    """교정 건수가 바뀌면 모든 사용자에게 새 모델이 쓰이도록 피드백 건수를 버전에 포함."""
+    """피드백 건수가 바뀌면 모든 사용자에게 새 모델이 쓰이도록 피드백 건수를 버전에 포함."""
     return len(read_feedback()) * 1000 + st.session_state.get("model_version", 0)
 
 
