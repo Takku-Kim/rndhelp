@@ -37,7 +37,7 @@ pages = {
         st.Page("views/mapping.py", url_path="mapping", title="비목 매핑 (K-water↔RCMS)", icon=":material/swap_horiz:"),
         st.Page("views/adaptor.py", url_path="adaptor", title="└ 정산 Adaptor (베타)"),
         st.Page("views/settlement.py", url_path="settlement", title="정산 사전점검", icon=":material/fact_check:"),
-        st.Page("views/inkind.py", url_path="inkind", title="현물 적정성 검토(자산)", icon=":material/precision_manufacturing:"),
+        st.Page("views/inkind.py", url_path="inkind", title="현물 적정성 검토(자산, 과업종료 직후)", icon=":material/precision_manufacturing:"),
     ],
     "지원": [
         st.Page("views/rules.py", url_path="rules", title="규정·FAQ 검색(발주기관별)", icon=":material/search:"),

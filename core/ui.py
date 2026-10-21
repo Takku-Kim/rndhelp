@@ -84,6 +84,8 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 /* 사이드바: 정산 Adaptor 는 비목 매핑의 하위 메뉴처럼 들여쓰기하고 글씨를 작게 */
 [data-testid="stSidebarNav"] a[href$="/adaptor"], [data-testid="stSidebarNav"] a[href*="/proposal-"] {{ margin-left:1.6rem; }}
 [data-testid="stSidebarNav"] a[href$="/adaptor"] p, [data-testid="stSidebarNav"] a[href*="/proposal-"] p {{ font-size:.8rem !important; }}
+/* 사이드바 긴 메뉴명은 말줄임 대신 줄바꿈 */
+[data-testid="stSidebarNav"] a[href$="/inkind"] [data-testid="stMarkdownContainer"], [data-testid="stSidebarNav"] a[href$="/inkind"] p {{ white-space:normal !important; overflow:visible !important; text-overflow:clip !important; line-height:1.3; }}
 .kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
 @media (max-width: 640px) {{ .kw-grid {{ grid-template-columns:repeat(2,1fr); gap:8px; }} .kw-grid .kw-card .val {{ font-size:1.2rem; }} }}
 div[data-testid="stMetricValue"] {{ font-size:1.4rem; }}
