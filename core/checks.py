@@ -69,7 +69,7 @@ def check_row(i: int, r: pd.Series, p: ProjectInfo) -> list[Finding]:
 
     # 2. 유흥·접대
     if ALCOHOL.search(desc) or str(r.get("RCMS 비목")) == "불인정" and "유흥" in semok:
-        f.append(Finding(i, "불인정", "유흥·접대성 경비", "주류 등 유흥성 비용은 계상 불가.", "K07", amt))
+        f.append(Finding(i, "불인정", "회의비", "주류 등 유흥성 비용은 계상 불가.", "K07", amt))
 
     # 3. 회의 식비
     if FOOD.search(desc) and (semok == "회의비" or str(r.get("account")) in ("5220", "5230")):
