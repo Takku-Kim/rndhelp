@@ -48,7 +48,8 @@ def _archive_dialog():
 def _feedback_dialog():
     df = state.read_interviews()
     if len(df):
-        st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch", height=380)
+        st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch", height=380,
+                     column_config={"ts": "일시"})
     else:
         st.caption("접수된 의견이 없음.")
     st.page_link("views/interview.py", label="연구소별 의견/피드백 공간으로 이동", icon=":material/forum:")

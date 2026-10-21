@@ -46,7 +46,8 @@ if len(df):
         st.bar_chart(df["연구소"].value_counts(), horizontal=True, color="#005BAC")
     with c2:
         st.bar_chart(df["유형"].value_counts(), horizontal=True, color="#00A0B0")
-    st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch")
+    st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch",
+                 column_config={"ts": "일시"})
     st.download_button("접수 내역 내려받기 (csv)", df.to_csv(index=False).encode("utf-8-sig"), "rndhelp_interviews.csv")
 if store.mode() != "github":
     ui.note("<b>⚠ 비공개 저장 서버 미연결</b> — 현재 접수 내용은 서버 임시 파일에만 저장되어 앱 재시작·재배포 시 사라질 수 있음. "
