@@ -29,7 +29,7 @@ with st.form("iv", clear_on_submit=True):
     body = st.text_area("상황 설명", placeholder="무엇이 어려웠는지, 어떤 지적을 받았는지")
     idea = st.text_area("개선 아이디어 (선택)", height=70)
     who = st.text_input("작성자 (선택)")
-    if st.form_submit_button("접수", type="primary"):
+    if st.form_submit_button("확인", type="primary"):
         if not body.strip():
             st.warning("상황 설명 입력 필요")
         else:
@@ -48,8 +48,6 @@ if len(df):
         st.bar_chart(df["유형"].value_counts(), horizontal=True, color="#00A0B0")
     st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch")
     st.download_button("접수 내역 내려받기 (csv)", df.to_csv(index=False).encode("utf-8-sig"), "rndhelp_interviews.csv")
-if store.mode() == "github":
-    ui.note("접수 내용은 비공개 데이터 저장소에 즉시 보관되며, 앱 재시작·재배포와 무관하게 유지됨.")
-else:
-    ui.note("<b>⚠ 영구 저장소 미연결</b> — 현재 접수 내용은 서버 임시 파일에만 저장되어 앱 재시작·재배포 시 사라질 수 있음. "
+if store.mode() != "github":
+    ui.note("<b>⚠ 비공개 저장 서버 미연결</b> — 현재 접수 내용은 서버 임시 파일에만 저장되어 앱 재시작·재배포 시 사라질 수 있음. "
             "접수 후 반드시 위 '접수 내역 내려받기'로 보관할 것. (README의 '의견·피드백 영구 보관' 참고)", "warn")

@@ -117,7 +117,7 @@ def read(name: str, **kw) -> pd.DataFrame:
 def append(name: str, row: dict) -> tuple[bool, str]:
     """행 추가. (영구 저장 성공 여부, 메시지). 로컬 파일에는 항상 기록."""
     cfg = _cfg()
-    ok, msg = False, "영구 저장소 미연결 — 서버 임시 파일에만 저장됨. 접수 내역을 반드시 내려받아 보관할 것."
+    ok, msg = False, "비공개 저장 서버 미연결 — 서버 임시 파일에만 저장됨. 접수 내역을 반드시 내려받아 보관할 것."
     if cfg:
         try:
             for attempt in range(2):
@@ -133,10 +133,10 @@ def append(name: str, row: dict) -> tuple[bool, str]:
                         continue  # 동시 접수로 sha 충돌 → 최신본 다시 읽어 재시도
                     raise
             _cached_remote.clear()
-            ok, msg = True, "영구 저장소에 저장됨."
+            ok, msg = True, "비공개 저장 서버에 저장됨."
             local = new
         except Exception as e:  # 네트워크·권한 오류
-            msg = f"영구 저장소 저장 실패({_why(e)}) — 서버 임시 파일에만 저장됨. 내려받아 보관할 것."
+            msg = f"비공개 저장 서버 저장 실패({_why(e)}) — 서버 임시 파일에만 저장됨. 내려받아 보관할 것."
             local = pd.concat([_read_local(name, dtype=str).fillna(""), pd.DataFrame([row]).astype(str)], ignore_index=True)
     else:
         local = pd.concat([_read_local(name, dtype=str).fillna(""), pd.DataFrame([row]).astype(str)], ignore_index=True)
