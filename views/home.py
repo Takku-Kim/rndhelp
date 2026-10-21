@@ -19,15 +19,15 @@ ui.card_grid([
 ui.section("업무 단계별 바로가기")
 a, b, c = st.columns(3)
 with a:
-    st.markdown("**① 과제 준비**")
+    st.markdown("**① 과제 준비 단계**")
     st.caption("전문기관별 체크리스트, 연구개발비 편성 한도 검증, 계획서 목차 초안")
     st.page_link("views/proposal.py", label="제안서 작성 도우미", icon=":material/edit_document:")
 with b:
-    st.markdown("**② 수행 중 집행**")
+    st.markdown("**② 수행 중 집행 단계**")
     st.caption("K-water 계정·적요를 넣으면 RCMS 비목/세목과 필요 증빙을 안내")
     st.page_link("views/mapping.py", label="비목 매핑 (K-water↔RCMS)", icon=":material/swap_horiz:")
 with c:
-    st.markdown("**③ 사용실적보고·정산**")
+    st.markdown("**③ 사용실적보고·정산 단계**")
     st.caption("집행내역 일괄 점검, 현물(장비) 산정 근거와 소명서 초안")
     st.page_link("views/settlement.py", label="정산 사전점검", icon=":material/fact_check:")
     st.page_link("views/inkind.py", label="현물 적정성 점검", icon=":material/precision_manufacturing:")
