@@ -42,7 +42,12 @@ pages = {
 }
 
 with st.sidebar:
-    st.caption("K-water 연구원 · AI연구소")
+    st.markdown(
+        '<div style="font-size:.74rem;color:#6B7684;line-height:1.6;margin-top:6px">'
+        'K-water연구원 · AI연구소<br>'
+        '<span style="font-size:.68rem;color:#8B95A1">© 2026 K-water Research Institute</span></div>',
+        unsafe_allow_html=True,
+    )
 
 nav = st.navigation(pages)
 nav.run()
