@@ -65,7 +65,25 @@ def _remote_put(cfg: dict, name: str, df: pd.DataFrame, sha: str | None, msg: st
     if sha:
         body["sha"] = sha
     r = requests.put(_url(cfg, name), headers=_headers(cfg), json=body, timeout=20)
+    if r.status_code in (404, 422) and not sha:
+        # 빈 저장소(브랜치 없음)면 branch 를 빼고 다시 시도 → 기본 브랜치가 새로 만들어짐
+        body.pop("branch", None)
+        r = requests.put(_url(cfg, name), headers=_headers(cfg), json=body, timeout=20)
     r.raise_for_status()
+
+
+def _why(e: Exception) -> str:
+    """오류 원인을 사람이 읽을 수 있게 (토큰 값은 절대 포함하지 않음)."""
+    resp = getattr(e, "response", None)
+    if resp is None:
+        return type(e).__name__
+    try:
+        detail = resp.json().get("message", "")
+    except Exception:
+        detail = ""
+    hint = {401: "토큰이 잘못되었거나 만료됨", 403: "토큰 권한 부족(Contents: Read and write, 대상 저장소 선택 확인)",
+            404: "저장소 이름 또는 토큰의 저장소 접근 권한 확인", 409: "동시 저장 충돌", 422: "저장소가 비어 있거나 브랜치 없음"}.get(resp.status_code, "")
+    return f"HTTP {resp.status_code} {detail} {hint}".strip()
 
 
 def _local_path(name: str):
@@ -118,7 +136,7 @@ def append(name: str, row: dict) -> tuple[bool, str]:
             ok, msg = True, "영구 저장소에 저장됨."
             local = new
         except Exception as e:  # 네트워크·권한 오류
-            msg = f"영구 저장소 저장 실패({type(e).__name__}) — 서버 임시 파일에만 저장됨. 내려받아 보관할 것."
+            msg = f"영구 저장소 저장 실패({_why(e)}) — 서버 임시 파일에만 저장됨. 내려받아 보관할 것."
             local = pd.concat([_read_local(name, dtype=str).fillna(""), pd.DataFrame([row]).astype(str)], ignore_index=True)
     else:
         local = pd.concat([_read_local(name, dtype=str).fillna(""), pd.DataFrame([row]).astype(str)], ignore_index=True)
