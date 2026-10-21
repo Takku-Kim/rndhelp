@@ -34,7 +34,7 @@ st.markdown(
     '<div class="box src">OASIS<small>인트라넷 · 관련 방침·지침</small></div>'
     '<div class="box src opt">STP<small>기술통합관리 · 과제정보 (필요시)</small></div></div>'
     '<div class="arr">→</div>'
-    '<div class="box store">제3의 공간<small>Adaptor 보관소 — 자료 보관·버전 관리</small></div>'
+    '<div class="box store">저장소(예산집행 전용, 비공개)<small>Adaptor 보관소 — 자료 보관·버전 관리</small></div>'
     '<div class="arr">→</div>'
     '<div class="box adp">정산 Adaptor<small>① 매핑 ② 점검 ③ 변환</small></div>'
     '<div class="arr">→</div>'
@@ -110,7 +110,7 @@ ui.section("어댑터 절차")
 t1, t2, t3, t4, t5 = st.tabs(["① 자료 보관", "② 비목 매핑", "③ 사전 점검", "④ RCMS 변환", "⑤ 확정"])
 
 with t1:
-    st.markdown("연계 대상 자료를 **제3의 공간(Adaptor 보관소)** 에 모아 두고, 과제별로 같은 기준 자료를 사용함.")
+    st.markdown("연계 대상 자료를 **저장소(예산집행 전용, 비공개)** 에 모아 두고, 과제별로 같은 기준 자료를 사용함.")
     st.dataframe(pd.DataFrame([
         {"자료": "집행내역", "출처": "K-water FMS (재무통합)", "용도": "RCMS 비목 변환 대상", "필요": "필수", "수신 현황": f"{len(mapped)}건"},
         {"자료": "관련 방침·지침", "출처": "OASIS (인트라넷)", "용도": "내부 정산 방침·절차 기준", "필요": "필수", "수신 현황": "규정 아카이브와 함께 관리"},
