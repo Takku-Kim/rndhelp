@@ -26,7 +26,7 @@ CSS = f"""
 html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, input, textarea {{
   font-family: 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
 }}
-.block-container {{ padding-top: 1.2rem; max-width: 1240px; }}
+.block-container {{ padding-top: 4rem; max-width: 1240px; }}
 @media (max-width: 640px) {{
   .block-container {{ padding-top: 3.8rem; padding-left: .9rem; padding-right: .9rem; }}
   .kw-top {{ flex-direction: column; align-items: flex-start !important; gap: 2px; padding: 10px 14px !important; }}
@@ -74,7 +74,7 @@ def setup_page() -> None:
     st.markdown(CSS, unsafe_allow_html=True)
     st.markdown(
         '<div class="kw-top"><div class="kw-top-l"><div class="sub">K-water 연구원 R&amp;D 지원 에이전트</div>'
-        '<div class="brand">국가 수탁 관리 시스템</div></div>'
+        '<div class="brand">수탁과제 관리 Support 시스템</div></div>'
         '<div class="meta">RND-HELP · 시범운영<br>기준: 연구개발비 사용 기준 2026.5.6. 개정 반영</div></div>',
         unsafe_allow_html=True,
     )
