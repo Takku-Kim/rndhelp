@@ -36,7 +36,8 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
   .kw-title {{ font-size: 1.2rem !important; }}
 }}
 [data-testid="stSidebar"] {{ background: #F4F6F9; border-right: 1px solid #DDE3EA; }}
-[data-testid="stSidebarNav"] span {{ font-size: 0.92rem; }}
+[data-testid="stSidebarNav"] span {{ font-size: 0.84rem; }}
+[data-testid="stSidebarNav"] a p {{ font-size: 0.84rem !important; }}
 .kw-top {{
   display:flex; justify-content:space-between; align-items:center;
   background:{KW_NAVY}; color:#fff; padding:16px 22px; border-radius:4px; margin-bottom:14px; gap:16px;
@@ -83,7 +84,7 @@ html, body, [class*="css"], .stMarkdown, .stTextInput, .stSelectbox, button, inp
 .kw-step .tx b {{ color:#16202C; }} .kw-step .tx span {{ color:#4E5968; font-size:.86rem; }}
 /* 사이드바: 정산 Adaptor 는 비목 매핑의 하위 메뉴처럼 들여쓰기하고 글씨를 작게 */
 [data-testid="stSidebarNav"] a[href$="/adaptor"], [data-testid="stSidebarNav"] a[href*="/proposal-"] {{ margin-left:1.6rem; }}
-[data-testid="stSidebarNav"] a[href$="/adaptor"] p, [data-testid="stSidebarNav"] a[href*="/proposal-"] p {{ font-size:.8rem !important; }}
+[data-testid="stSidebarNav"] a[href$="/adaptor"] p, [data-testid="stSidebarNav"] a[href*="/proposal-"] p {{ font-size:.76rem !important; }}
 /* 사이드바 긴 메뉴명은 말줄임 대신 줄바꿈 */
 [data-testid="stSidebarNav"] a[href$="/inkind"] [data-testid="stMarkdownContainer"], [data-testid="stSidebarNav"] a[href$="/inkind"] p {{ white-space:normal !important; overflow:visible !important; text-overflow:clip !important; line-height:1.3; }}
 .kw-grid {{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }}
