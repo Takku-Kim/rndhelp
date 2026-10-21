@@ -28,7 +28,7 @@ ui.setup_page()
 pages = {
     "": [st.Page("views/home.py", title="홈", icon=":material/home:", default=True)],
     "과제 준비": [
-        st.Page("views/proposal.py", url_path="proposal", title="제안서 작성 도우미", icon=":material/edit_document:"),
+        st.Page("views/proposal.py", url_path="proposal", title="제안서 작성 지원 Tool", icon=":material/edit_document:"),
     ],
     "수행·정산": [
         st.Page("views/mapping.py", url_path="mapping", title="비목 매핑 (K-water↔RCMS)", icon=":material/swap_horiz:"),
