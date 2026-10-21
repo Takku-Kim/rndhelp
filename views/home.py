@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 
 from core import export, loader, state, ui
@@ -9,27 +10,63 @@ ui.header("", "국가 수탁 R&D 단계별 지원",
 
 
 
+def _xlsx_mime():
+    return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+
 @st.dialog("AI 학습데이터", width="large")
 def _train_dialog():
     st.caption("K-water 계정 + 적요 + 거래처 → RCMS 비목·세목 (AI 분류 학습에 사용하는 집행내역)")
-    df = export.train_frame()
-    st.dataframe(df, hide_index=True, width="stretch", height=380,
+    st.dataframe(export.train_frame(), hide_index=True, width="stretch", height=380,
                  column_config={"금액(원)": st.column_config.NumberColumn(format="localized")})
     st.download_button("엑셀로 내려받기 (xlsx)", export.train_xlsx(), "RND-HELP_AI학습데이터.xlsx",
-                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary")
+                       mime=_xlsx_mime(), type="primary")
 
 
-if st.query_params.get("data") == "train":
+@st.dialog("매핑 룰", width="large")
+def _rules_dialog():
+    st.caption("K-water 계정 × 적요 키워드 → RCMS 비목·세목")
+    df = pd.DataFrame([{"ID": r["id"], "이름": r["name"], "대상 계정": ", ".join(r.get("accounts", [])) or "전체",
+                        "키워드": ", ".join(r["patterns"]), "RCMS": f"{r['bimok']} › {r['semok']}",
+                        "우선순위": r.get("priority"), "검증": "✓" if r.get("verified", True) else "확인필요"}
+                       for r in loader.mapping_rules()])
+    st.dataframe(df, hide_index=True, width="stretch", height=420)
+
+
+@st.dialog("아카이브", width="large")
+def _archive_dialog():
+    reg = loader.regulations()
+    st.caption("사용기준·KEITI 사례집 등 규정 요약 (원문 확인 필요)")
+    df = pd.DataFrame([{"구분": it["category"], "제목": it["title"], "조항": it["article"],
+                        "내용": " ".join(it["text"].split()),
+                        "출처": reg["sources"].get(it["source"], {}).get("name", it["source"])}
+                       for it in reg["items"]])
+    st.dataframe(df, hide_index=True, width="stretch", height=420)
+
+
+@st.dialog("의견·피드백", width="large")
+def _feedback_dialog():
+    df = state.read_interviews()
+    if len(df):
+        st.dataframe(df.sort_values("ts", ascending=False), hide_index=True, width="stretch", height=380)
+    else:
+        st.caption("접수된 의견이 없음.")
+    st.page_link("views/interview.py", label="연구소별 의견/피드백 공간으로 이동", icon=":material/forum:")
+
+
+_DIALOGS = {"train": _train_dialog, "rules": _rules_dialog, "archive": _archive_dialog, "feedback": _feedback_dialog}
+_sel = st.query_params.get("data")
+if _sel in _DIALOGS:
     del st.query_params["data"]
-    _train_dialog()
+    _DIALOGS[_sel]()
 
 hm = state.get_mapper(state.model_version())
 iv = state.read_interviews()
 ui.card_grid([
-    ("매핑 룰", f"{len(loader.mapping_rules())}개", "K-water 계정 × 적요 키워드"),
-    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함 · 클릭하여 보기", "?data=train"),
-    ("규정 지식베이스", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등"),
-    ("접수된 의견·피드백", f"{len(iv)}건", "7개 연구소 인터뷰"),
+    ("매핑 룰", f"{len(loader.mapping_rules())}개", "K-water 계정 × 적요 키워드", "?data=rules"),
+    ("AI 학습 집행건", f"{hm.model.n_train + hm.model.n_feedback:,}건", f"담당자 피드백 {hm.model.n_feedback}건 포함", "?data=train"),
+    ("아카이브", f"{len(loader.regulations()['items'])}항목", "사용기준·KEITI 사례집 등", "?data=archive"),
+    ("접수된 의견·피드백", f"{len(iv)}건", "7개 연구소 인터뷰 등", "?data=feedback"),
 ])
 
 ui.section("업무 단계별 바로가기")
