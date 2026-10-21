@@ -5,7 +5,7 @@ import streamlit as st
 
 from core import loader, state, ui
 
-ui.header("지원 › 연구소 애로사항 접수", "연구소별 정산 애로사항 접수",
+ui.header("지원 › 연구소별 의견/피드백 공간", "연구소별 의견/피드백 공간",
           "연구소 인터뷰 내용을 같은 양식으로 모아 룰·체크리스트·학습데이터 보완에 활용함.")
 
 with st.expander("인터뷰 질문지 (진행자용)"):

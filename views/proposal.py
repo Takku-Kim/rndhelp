@@ -50,7 +50,7 @@ with t2:
     ui.section("연구원에서 실제로 겪은 실수 (사례 축적 중)")
     for p in A["pitfalls"]:
         st.markdown(f"- {p}")
-    st.caption("연구소 인터뷰에서 나온 사례는 '연구소 애로사항 접수' 메뉴로 모아 이 목록에 반영함.")
+    st.caption("연구소 인터뷰에서 나온 사례는 '연구소별 의견/피드백 공간' 메뉴로 모아 이 목록에 반영함.")
 
 with t3:
     c1, c2 = st.columns(2)
