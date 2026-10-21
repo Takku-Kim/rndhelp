@@ -16,7 +16,7 @@ hm = state.get_mapper(state.model_version())
 rs = state.get_search()
 
 # ───────────────────────── 개념 ─────────────────────────
-ui.section("어댑터란?")
+ui.section("R&D 반복업무 절감을 위한 어댑터 활용 프로세스")
 c1, c2 = st.columns([1.1, 1])
 with c1:
     st.markdown(
